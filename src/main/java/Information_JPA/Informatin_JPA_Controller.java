@@ -66,7 +66,7 @@ public class Informatin_JPA_Controller {
 
 	}
 
-	public boolean saveConnection(Product_Interface data,String caseString, int id) {
+	public boolean saveConnection(Product_Interface data,String caseString, Long id) {
 		if (caseString.equals("Head01")) {
 			if(data instanceof Product_Head) {
 	            Product_Head productHead = (Product_Head) data;
@@ -114,7 +114,7 @@ public class Informatin_JPA_Controller {
 
 	}
 
-	public boolean updateConnection(String caseString, int id) {
+	public boolean updateConnection(String caseString,String jsonContent,String hashCode ,Long id) {
 
 		if (caseString.equals("Head03")) {
 			return true;
@@ -123,7 +123,7 @@ public class Informatin_JPA_Controller {
 			return true;
 
 		} else if (caseString.equals("Tree03")) {
-			information_Tree_JPA.insertTreeContent("", "");
+			information_Tree_JPA.insertTreeContent(hashCode, jsonContent);
 
 			return true;
 

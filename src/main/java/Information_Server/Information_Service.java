@@ -15,18 +15,17 @@ import Information_Object.Product_Tree;
 public class Information_Service {
 
 	private Informatin_JPA_Controller informatin_JPA_Controller;
+	private Information_Admin_Service information_Admin_Service;
 
-	public Information_Service(Informatin_JPA_Controller informatin_JPA_Controller) {
+	public Information_Service(Informatin_JPA_Controller informatin_JPA_Controller,
+			Information_Admin_Service information_Admin_Service) {
 		this.informatin_JPA_Controller = informatin_JPA_Controller;
+		this.information_Admin_Service = information_Admin_Service;
 	}
 
-	public String admin_Check(String account) {  //check account is true
-		return "Sucess";
-
-	}
-
-	public String delete_Check(String account) { //check tree or kid is empty
-		return "Sucess";
+	public Product_Admin admin_Check(long id) { // check account is true
+		Product_Admin admin = information_Admin_Service.get_Admin(id);
+		return admin;
 	}
 
 	public String get_Head() {
@@ -46,22 +45,40 @@ public class Information_Service {
 
 	}
 
-	public String insert_Information(Product_Interface data, String caseString, Long id) {
-		return (informatin_JPA_Controller.saveConnection(data, caseString, id)) ? "sucess" : "fail";
+	public String insert_Information(Product_Interface data, String caseString, Long id, String hashcode) {
+		Product_Admin admin = admin_Check(id);
+		if (admin.getToken().equals(hashcode) && admin.getLevel()<=1) {
+			return (informatin_JPA_Controller.saveConnection(data, caseString, id)) ? "sucess" : "fail";
+
+		} else {
+			return "Account has no permissions";
+
+		}
 	}
 
-	public String delete_Information(Product_Interface data, String caseString, Long id) {
+	public String delete_Information(Product_Interface data, String caseString, Long id, String hashcode) {
+		Product_Admin admin = admin_Check(id);
+		if (admin.getToken().equals(hashcode) && admin.getLevel()<=1) {
+			return (informatin_JPA_Controller.deleteConnection(caseString, id)) ? "sucess" : "fail";
 
-		return (informatin_JPA_Controller.deleteConnection(caseString, id)) ? "sucess" : "fail";
+		} else {
+			return "Account has no permissions";
+
+		}
 
 	}
 
-	public String update_Information(String jsonContent, String hashCode, String caseString, Long id) {
+	public String update_Information(String jsonContent, String hashCode, String caseString, Long id, String hashcode) {
+		Product_Admin admin = admin_Check(id);
+		if (admin.getToken().equals(hashcode) && admin.getLevel()<=1) {
+			return (informatin_JPA_Controller.updateConnection(jsonContent, hashCode, caseString, id)) ? "sucess"
+					: "fail";
 
-		return (informatin_JPA_Controller.updateConnection(jsonContent, hashCode, caseString, id)) ? "sucess" : "fail";
+		} else {
+			return "Account has no permissions";
+
+		}
 
 	}
-
-	
 
 }

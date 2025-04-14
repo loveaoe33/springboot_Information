@@ -1,7 +1,5 @@
 package Information_JPA;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +15,7 @@ public class Information_Admin_Controller {
 		this.information_Admin_JPA = information_Admin_JPA;
 		this.product_Admin = product_Admin;
 	}
-	
-    public Product_Admin getAccount(long id) {
-    		Product_Admin admin=information_Admin_JPA.findById(id).orElse(null);
-        	return admin;
-    }
+
 	public boolean insertAccount(Product_Admin data) {
 		Product_Admin item = information_Admin_JPA.save(data);
 		if (item.getAccount().equals("")) {
@@ -35,7 +29,7 @@ public class Information_Admin_Controller {
 			System.out.println("刪除失敗 找不到ID:" + (long)data.getId() + "帳號代碼為:" + data.getAccount());
 			return false;
 		}
-		information_Admin_JPA.deleteById((long)data.getId() );
+		information_Admin_JPA.deleteById(id);
 		return true;
 	}
 

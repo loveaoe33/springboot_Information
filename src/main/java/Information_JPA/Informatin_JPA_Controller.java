@@ -1,6 +1,7 @@
 package Information_JPA;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.hibernate.mapping.List;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,7 @@ public class Informatin_JPA_Controller {
 	private Product_Kid product_Kid;
 	private Product_Tree product_Tree;
 	private ObjectMapper mapper;
+	private HashMap<String, Integer> numberValue = new HashMap<String, Integer>();
 
 	public Informatin_JPA_Controller(Information_Head_JPA information_Head_JPA, Information_Kid_JPA information_Kid_JPA,
 			Information_Tree_JPA information_Tree_JPA, Product_Head product_Head, Product_Kid product_Kid,
@@ -41,9 +43,8 @@ public class Informatin_JPA_Controller {
 		ArrayList<Product_Head> datas = (ArrayList<Product_Head>) information_Head_JPA.findAll();
 		for (Product_Head item : datas) {
 			data = mapper.writeValueAsString(item);
-			product_Head.set_Information_Data(data);
+			product_Head.set_Information_Data(item.hashcode, data);
 		}
-
 	}
 
 	public void init_Kid() throws JsonProcessingException {
@@ -51,7 +52,7 @@ public class Informatin_JPA_Controller {
 		ArrayList<Product_Kid> datas = (ArrayList<Product_Kid>) information_Kid_JPA.findAll();
 		for (Product_Kid item : datas) {
 			data = mapper.writeValueAsString(item);
-			product_Head.set_Information_Data(data);
+			product_Head.set_Information_Data(item.hashcode, data);
 		}
 
 	}
@@ -60,33 +61,52 @@ public class Informatin_JPA_Controller {
 		String data;
 		ArrayList<Product_Tree> datas = (ArrayList<Product_Tree>) information_Tree_JPA.findAll();
 		for (Product_Tree item : datas) {
+			numberValue.put(item.getHashcode(), item.getFocus_number());
 			data = mapper.writeValueAsString(item);
-			product_Head.set_Information_Data(data);
+			product_Head.set_Information_Data(item.hashcode, data);
 		}
 
 	}
 
-	public boolean saveConnection(Product_Interface data,String caseString, Long id) {
+	public void timerUpdate(String hashCode) throws JsonProcessingException {   //timer update
+		int Row = information_Tree_JPA.updateTreeNumber(hashCode, 0);
+		if (Row > 0) {
+			// something
+			init_Tree();
+		}
+	}
+
+	public HashMap<String, Integer> getNumberValue() {  
+
+		return numberValue;
+	}
+
+	public boolean saveConnection(Product_Interface data, String caseString, Long id) {
 		if (caseString.equals("Head01")) {
-			if(data instanceof Product_Head) {
-	            Product_Head productHead = (Product_Head) data;
-	            Product_Head result=information_Head_JPA.save(productHead);
+			if (data instanceof Product_Head) {
+				
+				Product_Head productHead = (Product_Head) data;
+				Product_Head result = information_Head_JPA.save(productHead);
+				product_Head.delete_Information_Data();
+				.caseString..
+				
+				
+				
 				return true;
 			}
 			return false;
 
-
 		} else if (caseString.equals("Kid01")) {
-			if(data instanceof Product_Kid) {
+			if (data instanceof Product_Kid) {
 				Product_Kid productKid = (Product_Kid) data;
-				Product_Kid result=information_Kid_JPA.save(productKid);
+				Product_Kid result = information_Kid_JPA.save(productKid);
 				return true;
 			}
 			return false;
 		} else if (caseString.equals("Tree01")) {
-			if(data instanceof Product_Head) {
-	            Product_Tree productTree= (Product_Tree) data;
-	            Product_Tree result=information_Tree_JPA.save(productTree);
+			if (data instanceof Product_Head) {
+				Product_Tree productTree = (Product_Tree) data;
+				Product_Tree result = information_Tree_JPA.save(productTree);
 				return true;
 			}
 			return false;
@@ -114,18 +134,17 @@ public class Informatin_JPA_Controller {
 
 	}
 
-	public boolean updateConnection(String caseString,String jsonContent,String hashCode ,Long id) {
+	public boolean updateConnection(String caseString, String jsonContent, String hashCode, Long id) {
 
 		if (caseString.equals("Head03")) {
-			return true;
+			return false;
 
 		} else if (caseString.equals("Kid03")) {
-			return true;
+			return false;
 
 		} else if (caseString.equals("Tree03")) {
-			information_Tree_JPA.insertTreeContent(hashCode, jsonContent);
-
-			return true;
+			int Row = information_Tree_JPA.updateTreeContent(hashCode, jsonContent);
+			return (Row > 0) ? true : false;
 
 		} else {
 			return false;

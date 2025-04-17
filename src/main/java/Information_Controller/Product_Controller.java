@@ -25,21 +25,6 @@ public class Product_Controller implements ErrorController {
 	}
 
 
-	
-	public String process_Admin(String caseSelect) {
-		if(caseSelect.equals("insert")){
-			return "sucess";
-
-		}else if(caseSelect.equals("delete")) {
-			return "sucess";
-
-		}else if(caseSelect.equals("update")) {
-			return "sucess";
-
-		}
-		return "fail";
-	}
-	
 	public String init_Information_Json() { // init data
 		return null;
 	}

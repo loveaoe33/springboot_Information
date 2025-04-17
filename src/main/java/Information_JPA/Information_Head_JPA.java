@@ -8,4 +8,6 @@ import Information_Object.Product_Head;
 @Repository 
 public interface Information_Head_JPA extends JpaRepository<Product_Head, Long>{
 
+	
+	
 }

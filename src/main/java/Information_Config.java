@@ -18,7 +18,6 @@ public class Information_Config {
 	public ObjectMapper getMapper() {
 		return new ObjectMapper();
 	}
-	
 
 	@Bean
 	public Product_Head getHeadBean() {

@@ -1,6 +1,7 @@
 package Information_Object;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Component;
 
@@ -45,7 +46,7 @@ public class Product_Kid implements Product_Interface{
 	
 	
 	@Override
-	public void set_Information_Data(String Item) {
+	public void set_Information_Data(String Key,String Item) {
 		// TODO Auto-generated method stub
 	}
 
@@ -61,7 +62,7 @@ public class Product_Kid implements Product_Interface{
 	}
 
 	@Override
-	public ArrayList<String> get_Information_arrayData() {
+	public HashMap<String,String> get_Information_arrayData() {
 		// TODO Auto-generated method stub
 		return null;
 	}

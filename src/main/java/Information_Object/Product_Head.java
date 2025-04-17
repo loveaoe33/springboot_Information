@@ -1,6 +1,7 @@
 package Information_Object;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.springframework.stereotype.Component;
 
@@ -38,12 +39,12 @@ public class Product_Head implements Product_Interface {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss")
 	public String create_date;
 	public String create_name;
-	public ArrayList<String> data=new ArrayList<String>();
+	public HashMap<String,String> data=new HashMap<String,String>();
 
 	@Override
-	public void set_Information_Data(String Item) {
+	public void set_Information_Data(String Key,String Item) {
 		// TODO Auto-generated method stub
-		data.add(Item);
+		data.put(Key,Item);
 	}
 
 
@@ -58,7 +59,7 @@ public class Product_Head implements Product_Interface {
 	}
 
 	@Override
-	public ArrayList<String> get_Information_arrayData() {
+	public HashMap<String,String> get_Information_arrayData() {
 		// TODO Auto-generated method stub
 		return data;
 	}

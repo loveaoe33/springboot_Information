@@ -27,6 +27,7 @@ public class Information_Service {
 	private Product_Kid product_Kid;
 	private Product_Tree product_Tree;
 	private ObjectMapper mapper;
+	
 
 	public Information_Service(Informatin_JPA_Controller informatin_JPA_Controller, Product_Head product_Head,
 			Product_Kid product_Kid, Product_Tree product_Tree, ObjectMapper mapper,
@@ -63,7 +64,7 @@ public class Information_Service {
 		return result;
 	}
 
-	public String insert_Information(Product_Interface data, String caseString, Long id, String hashcode) {
+	public String insert_Information(Product_Interface data, String caseString, Long id, String hashcode) throws JsonProcessingException {
 		Product_Admin admin = admin_Check(id);
 		if (admin.getToken().equals(hashcode) && admin.getLevel() <= 1) {
 			return (informatin_JPA_Controller.saveConnection(data, caseString, id)) ? "sucess" : "fail";
@@ -74,10 +75,10 @@ public class Information_Service {
 		}
 	}
 
-	public String delete_Information(Product_Interface data, String caseString, Long id, String hashcode) {
+	public String delete_Information(Product_Interface data, String caseString,String hashcode, Long id) {
 		Product_Admin admin = admin_Check(id);
 		if (admin.getToken().equals(hashcode) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.deleteConnection(caseString, id)) ? "sucess" : "fail";
+			return (informatin_JPA_Controller.deleteConnection(caseString, hashcode, id)) ? "sucess" : "fail";
 
 		} else {
 			return "Account has no permissions";
@@ -102,6 +103,11 @@ public class Information_Service {
 	public void update_NumberValue(String hashCode) {
 		HashMap<String,Integer> number=informatin_JPA_Controller.getNumberValue();
 		number.compute(hashCode, (Key,val)->val==null?1:val+1);
+	}
+	
+	public  String get_NumberValue() throws JsonProcessingException {
+		String result=mapper.writeValueAsString(informatin_JPA_Controller.getNumberValue());
+		return result;
 	}
 
 }

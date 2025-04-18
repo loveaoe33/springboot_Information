@@ -68,7 +68,7 @@ public class Informatin_JPA_Controller {
 
 	}
 
-	public void timerUpdate(String hashCode) throws JsonProcessingException {   //timer update
+	public void timerUpdate(String hashCode) throws JsonProcessingException { // timer update
 		int Row = information_Tree_JPA.updateTreeNumber(hashCode, 0);
 		if (Row > 0) {
 			// something
@@ -76,37 +76,34 @@ public class Informatin_JPA_Controller {
 		}
 	}
 
-	public HashMap<String, Integer> getNumberValue() {  
+	public HashMap<String, Integer> getNumberValue() {
 
 		return numberValue;
 	}
 
-	public boolean saveConnection(Product_Interface data, String caseString, Long id) {
+	public boolean saveConnection(Product_Interface data, String caseString, Long id) throws JsonProcessingException {
 		if (caseString.equals("Head01")) {
+			Product_Head productHead = (Product_Head) data;
 			if (data instanceof Product_Head) {
-				
-				Product_Head productHead = (Product_Head) data;
 				Product_Head result = information_Head_JPA.save(productHead);
-				product_Head.delete_Information_Data();
-				.caseString..
-				
-				
-				
+				product_Head.set_Information_Data(result.getHashcode(),mapper.writeValueAsString(result));
 				return true;
 			}
 			return false;
 
 		} else if (caseString.equals("Kid01")) {
+			Product_Kid productKid = (Product_Kid) data;
 			if (data instanceof Product_Kid) {
-				Product_Kid productKid = (Product_Kid) data;
 				Product_Kid result = information_Kid_JPA.save(productKid);
+				product_Kid.set_Information_Data(result.getHashcode(),mapper.writeValueAsString(result));
 				return true;
 			}
 			return false;
 		} else if (caseString.equals("Tree01")) {
+			Product_Tree productTree = (Product_Tree) data;
 			if (data instanceof Product_Head) {
-				Product_Tree productTree = (Product_Tree) data;
 				Product_Tree result = information_Tree_JPA.save(productTree);
+				product_Tree.set_Information_Data(result.getHashcode(),mapper.writeValueAsString(result));
 				return true;
 			}
 			return false;
@@ -116,16 +113,21 @@ public class Informatin_JPA_Controller {
 
 	}
 
-	public boolean deleteConnection(String caseString, Long id) {
+	public boolean deleteConnection(String caseString, String hashCode, Long id) {
 		if (caseString.equals("Head02")) {
 			information_Head_JPA.deleteById(id);
+			product_Head.delete_Information_Data(hashCode);
 			return true;
 
 		} else if (caseString.equals("Kid02")) {
 			information_Kid_JPA.deleteById(id);
+			product_Kid.delete_Information_Data(hashCode);
+
 			return true;
 		} else if (caseString.equals("Tree02")) {
 			information_Tree_JPA.deleteById(id);
+			product_Tree.delete_Information_Data(hashCode);
+
 			return true;
 
 		} else {
@@ -144,7 +146,12 @@ public class Informatin_JPA_Controller {
 
 		} else if (caseString.equals("Tree03")) {
 			int Row = information_Tree_JPA.updateTreeContent(hashCode, jsonContent);
-			return (Row > 0) ? true : false;
+			if (Row > 0) {
+				product_Tree.update_Information_Data(hashCode, jsonContent);
+				return true;
+			} else {
+				return false;
+			}
 
 		} else {
 			return false;

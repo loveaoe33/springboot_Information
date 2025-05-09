@@ -1,5 +1,12 @@
 package Information_Object;
 
+import java.util.function.BiFunction;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.persistence.Entity;
@@ -51,6 +58,10 @@ public class Product_Lib {
 			// Head + Update 處理邏輯
 			return "Head03";
 		}
+		case "Head_State" -> {
+			// Head + Update 處理邏輯
+			return "Head04";
+		}
 		case "Kid_Insert" -> {
 			// Kid + Insert 處理邏輯
 			return "Kid01";
@@ -63,6 +74,11 @@ public class Product_Lib {
 		case "Kid_Update" -> {
 			// Kid + Update 處理邏輯
 			return "Kid03";
+
+		}
+		case "Kid_State" -> {
+			// Kid + Update 處理邏輯
+			return "Kid04";
 
 		}
 		case "Tree_Insert" -> {
@@ -78,11 +94,29 @@ public class Product_Lib {
 			// Tree + Update 處理邏輯
 			return "Tree03";
 		}
+		case "Tree_State" -> {
+			// Tree + Update 處理邏輯
+			return "Tree04";
+		}
 		default -> {
 			// 未知組合處理
 			return "fail";
 		}
 		}
 
+	}
+
+	public String getDate() { // get local date
+		LocalDate date = LocalDate.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+		String formatteDate = date.format(formatter);
+		return formatteDate;
+	}
+
+	public String getHash(String title, String date) { // get class hashcode
+		BiFunction<String, String, Integer> generateHashCode = (data1, data2) -> (data1 + data2).hashCode();
+		int code = generateHashCode.apply(title, date);
+		String res = Integer.toString(code);
+		return res;
 	}
 }

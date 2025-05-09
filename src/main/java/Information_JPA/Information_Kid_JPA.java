@@ -16,6 +16,18 @@ import jakarta.transaction.Transactional;
 @Repository
 public interface Information_Kid_JPA  extends JpaRepository<Product_Kid, Long>
 {
-
+	
+	@Modifying
+    @Transactional
+	@Query("Update Product_Kid r SET r.focus_number=?2 WHERE r.hashcode=?1  ")
+	int updateTreeNumber(String hashcode,int JsonContent);
+	
+	@Modifying
+    @Transactional
+ 	@Query("Update Product_Kid r SET r.show=?1" )
+	int updateProudctState(Boolean State); 
+	
+	
+	
 }
 

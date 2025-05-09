@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -38,16 +39,26 @@ public class Product_Tree implements Product_Interface{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int id;
+    @Schema(description = "大項抬頭", example = "藥局")
 	public String header;
+    @Schema(description = "父層識別碼", example = "")
 	public String father_header;
+    @Schema(description = "頂層識別碼", example = "")
 	public String top_header;
-	
+    @Schema(description = "類別識別碼", example = "")
 	public String hashcode;
+    @Schema(description = "建立日期", example = "20250101")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss")
 	public String create_date;
+    @Schema(description = "建立人", example = "Leo")
 	public String create_name;
+    @Schema(description = "點擊次數", example = "1")
 	public int focus_number;
+    @Schema(description = "圖片雲網址", example = "https://test/img")
 	public String img_url;
+    @Schema(description = "類別狀態", example = "true")
+	public boolean show;
+    @Schema(description = "類別json細項", example = "")
 	public String content_json;
 	@Transient
 	public HashMap<String,String> datas=new HashMap<String,String>();

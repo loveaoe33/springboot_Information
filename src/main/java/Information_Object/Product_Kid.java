@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -34,13 +35,23 @@ public class Product_Kid implements Product_Interface {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	public int id;
+    @Schema(description = "區塊名稱", example = "健康套餐")
 	public String header;
+    @Schema(description = "子區塊識別碼", example = "")
 	public String kid_header;
+    @Schema(description = "父區塊識別碼", example = "")
 	public String father_header;
+    @Schema(description = "區塊識別碼", example = "")
 	public String hashcode;
+    @Schema(description = "建立日期", example = "20250101")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss")
 	public String create_date;
+    @Schema(description = "建立者", example = "Leo")
 	public String create_name;
+    @Schema(description = "區塊狀態", example = "true")
+	public boolean show;
+    @Schema(description = "點擊次數", example = "1")
+	public int focus_number;
 	@Transient
 	public HashMap<String, String> datas = new HashMap<String, String>();
 

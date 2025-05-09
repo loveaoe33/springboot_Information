@@ -24,6 +24,11 @@ public interface Information_Tree_JPA extends JpaRepository<Product_Tree, Long>{
 	@Query("Update Product_Tree r SET r.focus_number=?2 WHERE r.hashcode=?1  ")
 	int updateTreeNumber(String hashcode,int JsonContent);
 	
+	@Modifying
+    @Transactional
+ 	@Query("Update Product_Tree r SET r.show=?1" )
+	int updateProudctState(Boolean State); 
+	
 }
 
 

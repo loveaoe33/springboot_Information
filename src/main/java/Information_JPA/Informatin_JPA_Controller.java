@@ -86,7 +86,7 @@ public class Informatin_JPA_Controller {
 			Product_Head productHead = (Product_Head) data;
 			if (data instanceof Product_Head) {
 				Product_Head result = information_Head_JPA.save(productHead);
-				product_Head.set_Information_Data(result.getHashcode(),mapper.writeValueAsString(result));
+				product_Head.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
 				return true;
 			}
 			return false;
@@ -95,7 +95,7 @@ public class Informatin_JPA_Controller {
 			Product_Kid productKid = (Product_Kid) data;
 			if (data instanceof Product_Kid) {
 				Product_Kid result = information_Kid_JPA.save(productKid);
-				product_Kid.set_Information_Data(result.getHashcode(),mapper.writeValueAsString(result));
+				product_Kid.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
 				return true;
 			}
 			return false;
@@ -103,7 +103,7 @@ public class Informatin_JPA_Controller {
 			Product_Tree productTree = (Product_Tree) data;
 			if (data instanceof Product_Head) {
 				Product_Tree result = information_Tree_JPA.save(productTree);
-				product_Tree.set_Information_Data(result.getHashcode(),mapper.writeValueAsString(result));
+				product_Tree.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
 				return true;
 			}
 			return false;
@@ -158,4 +158,26 @@ public class Informatin_JPA_Controller {
 		}
 	}
 
+	public boolean updateShow(String caseString, String jsonContent, String hashCode, Long id) {
+		if (caseString.equals("Head04")) {
+			return false;
+
+		} else if (caseString.equals("Kid04")) {
+			return false;
+
+		} else if (caseString.equals("Tree04")) {
+			int Row = information_Tree_JPA.updateTreeContent(hashCode, jsonContent);
+			if (Row > 0) {
+				product_Tree.update_Information_Data(hashCode, jsonContent);
+				return true;
+			} else {
+				return false;
+			}
+
+		} else {
+
+		}
+		return false;
+
+	}
 }

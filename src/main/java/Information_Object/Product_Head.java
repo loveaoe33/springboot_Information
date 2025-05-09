@@ -48,7 +48,9 @@ public class Product_Head implements Product_Interface {
 	public String create_date;
     @Schema(description = "建立人員", example = "Leo")
 	public String create_name;
-	@Transient
+    @Schema(description = "大項狀態", example = "true")
+	public boolean show;
+	@Transient	
 	public HashMap<String,String> datas=new HashMap<String,String>();
 
 	@Override

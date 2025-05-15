@@ -17,24 +17,28 @@ public class Information_Admin_Service {
 		this.information_Admin_Controller = information_Admin_Controller;
 	}
 
-	public Product_Admin get_Admin(long id) {
+	public Product_Admin get_Admin(long id) { //get admin
 		return information_Admin_Controller.getAccount(id);
 	}
+	
+	public boolean check_Admin() {
+		return false;
+	}
 
-	public String insert_Admin(Product_Admin account) {
+	public String insert_Admin(Product_Admin account) { // insert admin
 
 		boolean result = information_Admin_Controller.insertAccount(account);
 		return (result) ? "sucess" : "fail";
 
 	}
 
-	public String update_Admin(Product_Admin account) {
+	public String update_Admin(Product_Admin account) { // update admin
 		boolean result = information_Admin_Controller.updateAccount(account);
 		return (result) ? "sucess" : "fail";
 
 	}
 
-	public String delete_Admin(Product_Admin account) {
+	public String delete_Admin(Product_Admin account) {  //delete admin
 		boolean result = information_Admin_Controller.deleteAccount(account);
 		return (result) ? "sucess" : "fail";
 	}

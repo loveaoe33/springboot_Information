@@ -39,16 +39,40 @@ public class Product_Controller implements ErrorController {
 	@PostMapping("Product_Imformation/setProduct_Information") // Insert Product select
 	public String post_Information(@RequestBody Product_Head data,
 			@Parameter(description = "事件選擇") @RequestParam String caseSelect) {// insert data
-		return null;
+		
+		switch (caseSelect){
+			case "majorCase":
+				return "sucess";	
+			case "midCase":
+				return "sucess";
+			case "minorCase":
+				return "sucess";
+			default :
+				return "fail";
+		}
+
 	}
 
+	
+	
 	@Operation(summary = "刪除種類區塊")
 	@CrossOrigin
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@PostMapping("Product_Imformation/deleteProduct_Information") // delete Product select
-	public String delete_Information() {
-		return null;
+	public String delete_Information(@RequestBody Product_Head data,
+			@Parameter(description = "事件選擇") @RequestParam String caseSelect) {
+		
+		switch (caseSelect){
+		case "majorCase":
+			return "sucess";	
+		case "midCase":
+			return "sucess";
+		case "minorCase":
+			return "sucess";
+		default :
+			return "fail";
+	}
 	}
 
 	@Operation(summary = "取得標頭區塊")

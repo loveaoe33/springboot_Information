@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import Information_Object.Product_Head;
+import Information_Object.Product_Lib;
+import Information_Object.Product_Lib.INFORMATION;
 import Information_Server.Information_Admin_Service;
 import Information_Server.Information_Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,14 +24,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@ComponentScan(basePackages = { "Information_Object", "Information_Object", "Information_JPA", "Information_Server" })
+@ComponentScan(basePackages = { "Information_Config" ,"Information_Object", "Information_JPA", "Information_Server" })
 public class Product_Controller implements ErrorController {
 
 	private Information_Service information_Service;
+	private Product_Lib product_Lib;
 
 	@Autowired
-	public Product_Controller(Information_Service information_Server) {
+	public Product_Controller(Information_Service information_Service,Product_Lib product_Lib) {
 		this.information_Service = information_Service;
+		this.product_Lib=product_Lib;
 	}
 
 	@Operation(summary = "新增種類區塊")
@@ -39,22 +43,35 @@ public class Product_Controller implements ErrorController {
 	@PostMapping("Product_Imformation/setProduct_Information") // Insert Product select
 	public String post_Information(@RequestBody Product_Head data,
 			@Parameter(description = "事件選擇") @RequestParam String caseSelect) {// insert data
-		
-		switch (caseSelect){
-			case "majorCase":
-				return "sucess";	
+
+		try {
+			switch (caseSelect) {
+			case "marjorCase":
+				System.out.println("Body:" + data.header + "User:" + data.userString);
+				data.setHashcode("123");
+				data.setKid_header("123");
+				data.setTree_header("123");
+				data.setCreate_date("20250501");
+				data.setShowbool(true);
+				data.setCreate_name("Leo");
+				String x=information_Service.insert_Information(data, product_Lib.enumSelect(INFORMATION.Head,"Insert"));
+				System.out.println("Result"+x);
+				return "Sucess";
 			case "midCase":
 				return "sucess";
 			case "minorCase":
 				return "sucess";
-			default :
+			default:
 				return "fail";
+			}
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "sql exception";
 		}
 
 	}
 
-	
-	
 	@Operation(summary = "刪除種類區塊")
 	@CrossOrigin
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
@@ -62,17 +79,17 @@ public class Product_Controller implements ErrorController {
 	@PostMapping("Product_Imformation/deleteProduct_Information") // delete Product select
 	public String delete_Information(@RequestBody Product_Head data,
 			@Parameter(description = "事件選擇") @RequestParam String caseSelect) {
-		
-		switch (caseSelect){
+
+		switch (caseSelect) {
 		case "majorCase":
-			return "sucess";	
+			return "sucess";
 		case "midCase":
 			return "sucess";
 		case "minorCase":
 			return "sucess";
-		default :
+		default:
 			return "fail";
-	}
+		}
 	}
 
 	@Operation(summary = "取得標頭區塊")
@@ -112,7 +129,7 @@ public class Product_Controller implements ErrorController {
 
 		return null;
 	}
-	
+
 	@Operation(summary = "更新細項明細")
 	@CrossOrigin
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
@@ -122,7 +139,6 @@ public class Product_Controller implements ErrorController {
 
 		return null;
 	}
-	
 
 	@Operation(summary = "更新區塊狀態")
 	@CrossOrigin

@@ -33,73 +33,58 @@ public class Product_Lib {
 		Head, Kid, Tree
 	}
 
-	public void enumSelect(INFORMATION select, String caseSelect) {
-		switch (select) {
-		case Head, Kid, Tree -> choiceSelect(select.name(), caseSelect);
+	public String enumSelect(INFORMATION select, String caseSelect) {
+	    System.out.println("輸入: " + select);
 
-		default -> {
-
-		}
-
-		}
+	    return switch (select) {
+	        case Head, Kid, Tree -> choiceSelect(select.name(), caseSelect);
+	        default -> "fail";
+	    };
 	}
 
-	public String choiceSelect(String information, String caseSelect) {
+	private String choiceSelect(String information, String caseSelect) {
 		switch (information + "_" + caseSelect) {
 		case "Head_Insert" -> {
-			// Head + Insert 處理邏輯
 			return "Head01";
 		}
 		case "Head_Delete" -> {
-			// Head + Update 處理邏輯
 			return "Head02";
 		}
 		case "Head_Update" -> {
-			// Head + Update 處理邏輯
 			return "Head03";
 		}
 		case "Head_State" -> {
-			// Head + Update 處理邏輯
 			return "Head04";
 		}
 		case "Kid_Insert" -> {
-			// Kid + Insert 處理邏輯
 			return "Kid01";
 
 		}
 		case "Kid_Delete" -> {
-			// Head + Update 處理邏輯
 			return "Head02";
 		}
 		case "Kid_Update" -> {
-			// Kid + Update 處理邏輯
 			return "Kid03";
 
 		}
 		case "Kid_State" -> {
-			// Kid + Update 處理邏輯
 			return "Kid04";
 
 		}
 		case "Tree_Insert" -> {
-			// Tree + Insert 處理邏輯
 			return "Tree01";
 
 		}
 		case "Tree_Delete" -> {
-			// Head + Update 處理邏輯
 			return "Head02";
 		}
 		case "Tree_Update" -> {
-			// Tree + Update 處理邏輯
 			return "Tree03";
 		}
 		case "Tree_State" -> {
-			// Tree + Update 處理邏輯
 			return "Tree04";
 		}
 		default -> {
-			// 未知組合處理
 			return "fail";
 		}
 		}

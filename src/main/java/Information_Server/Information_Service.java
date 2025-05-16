@@ -64,10 +64,15 @@ public class Information_Service {
 		return result;
 	}
 
-	public String insert_Information(Product_Interface data, String caseString, Long id, String hashcode) throws JsonProcessingException {
-		Product_Admin admin = admin_Check(id);
-		if (admin.getToken().equals(hashcode) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.saveConnection(data, caseString, id)) ? "sucess" : "fail";
+	public String insert_Information(Product_Interface data, String caseString) throws JsonProcessingException {
+		Product_Head datas= (Product_Head) data;
+		String [] adminSplite=datas.userString.split(",");
+		Product_Admin admin = admin_Check((long)Integer.parseInt(adminSplite[0]));
+		
+		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1]) && admin.getLevel()==Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1  ) {
+			System.out.println("有近來55"+caseString);
+
+			return (informatin_JPA_Controller.saveConnection(data, caseString, (long)0)) ? "sucess" : "fail";
 
 		} else {
 			return "Account has no permissions";

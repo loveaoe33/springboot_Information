@@ -57,7 +57,7 @@ public class Product_Tree implements Product_Interface{
     @Schema(description = "圖片雲網址", example = "https://test/img")
 	public String img_url;
     @Schema(description = "類別狀態", example = "true")
-	public boolean show;
+	public boolean showbool;
     @Schema(description = "類別json細項", example = "")
 	public String content_json;
 	@Transient

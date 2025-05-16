@@ -1,3 +1,4 @@
+package Information_Config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -46,4 +47,6 @@ public class Information_Config {
 		return new Admin_Lib();
 
 	}
+	
+
 }

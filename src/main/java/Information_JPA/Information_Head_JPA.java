@@ -12,6 +12,6 @@ import jakarta.transaction.Transactional;
 public interface Information_Head_JPA extends JpaRepository<Product_Head, Long>{
 	@Modifying
     @Transactional
- 	@Query("Update Product_Head r SET r.show=?1" )
+ 	@Query("Update Product_Head r SET r.showbool=?1" )
 	int updateProudctState(Boolean State); 
 }

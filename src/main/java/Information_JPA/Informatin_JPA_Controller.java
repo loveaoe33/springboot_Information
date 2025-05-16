@@ -82,13 +82,20 @@ public class Informatin_JPA_Controller {
 	}
 
 	public boolean saveConnection(Product_Interface data, String caseString, Long id) throws JsonProcessingException {
+		System.out.println("接收"+caseString);
+
 		if (caseString.equals("Head01")) {
 			Product_Head productHead = (Product_Head) data;
+			
 			if (data instanceof Product_Head) {
+				System.out.println("有近");
+
 				Product_Head result = information_Head_JPA.save(productHead);
 				product_Head.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
 				return true;
 			}
+			System.out.println("沒進");
+
 			return false;
 
 		} else if (caseString.equals("Kid01")) {

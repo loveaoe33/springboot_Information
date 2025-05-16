@@ -26,7 +26,7 @@ public interface Information_Tree_JPA extends JpaRepository<Product_Tree, Long>{
 	
 	@Modifying
     @Transactional
- 	@Query("Update Product_Tree r SET r.show=?1" )
+ 	@Query("Update Product_Tree r SET r.showbool=?1" )
 	int updateProudctState(Boolean State); 
 	
 }

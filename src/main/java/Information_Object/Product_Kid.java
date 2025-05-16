@@ -49,7 +49,7 @@ public class Product_Kid implements Product_Interface {
     @Schema(description = "建立者", example = "Leo")
 	public String create_name;
     @Schema(description = "區塊狀態", example = "true")
-	public boolean show;
+	public boolean showbool;
     @Schema(description = "點擊次數", example = "1")
 	public int focus_number;
 	@Transient

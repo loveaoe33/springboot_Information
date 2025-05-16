@@ -49,7 +49,10 @@ public class Product_Head implements Product_Interface {
     @Schema(description = "建立人員", example = "Leo")
 	public String create_name;
     @Schema(description = "大項狀態", example = "true")
-	public boolean show;
+	public boolean showbool;
+    @Transient
+    @Schema(description = "接收傳送使用者認證字串", example = "loveaoe33,456,0")
+    public String userString;
 	@Transient	
 	public HashMap<String,String> datas=new HashMap<String,String>();
 

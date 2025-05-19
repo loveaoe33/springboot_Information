@@ -37,6 +37,8 @@ public class Informatin_JPA_Controller {
 		this.product_Tree = product_Tree;
 		this.mapper = mapper;
 	}
+	
+
 
 	public void init_Head() throws JsonProcessingException {
 		String data;
@@ -56,7 +58,6 @@ public class Informatin_JPA_Controller {
 		}
 
 	}
-
 	public void init_Tree() throws JsonProcessingException {
 		String data;
 		ArrayList<Product_Tree> datas = (ArrayList<Product_Tree>) information_Tree_JPA.findAll();
@@ -81,7 +82,7 @@ public class Informatin_JPA_Controller {
 		return numberValue;
 	}
 
-	public boolean saveConnection(Product_Interface data, String caseString, Long id) throws JsonProcessingException {
+	public boolean saveConnection(Product_Interface data, String caseString, Long id) throws JsonProcessingException { //insert class
 		System.out.println("接收"+caseString);
 
 		if (caseString.equals("Head01")) {
@@ -113,6 +114,8 @@ public class Informatin_JPA_Controller {
 				product_Tree.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
 				return true;
 			}
+			
+			
 			return false;
 		} else {
 			return false;
@@ -120,7 +123,7 @@ public class Informatin_JPA_Controller {
 
 	}
 
-	public boolean deleteConnection(String caseString, String hashCode, Long id) {
+	public boolean deleteConnection(String caseString, String hashCode, Long id) {  //delete class
 		if (caseString.equals("Head02")) {
 			information_Head_JPA.deleteById(id);
 			product_Head.delete_Information_Data(hashCode);
@@ -143,7 +146,7 @@ public class Informatin_JPA_Controller {
 
 	}
 
-	public boolean updateConnection(String caseString, String jsonContent, String hashCode, Long id) {
+	public boolean updateConnection(String caseString, String jsonContent, String hashCode, Long id) {  //update detail content
 
 		if (caseString.equals("Head03")) {
 			return false;
@@ -165,25 +168,32 @@ public class Informatin_JPA_Controller {
 		}
 	}
 
-	public boolean updateShow(String caseString, String jsonContent, String hashCode, Long id) {
+	public boolean updateShow(String caseString, Long id,String hashCode,boolean state) {  //update view
 		if (caseString.equals("Head04")) {
-			return false;
-
-		} else if (caseString.equals("Kid04")) {
-			return false;
-
-		} else if (caseString.equals("Tree04")) {
-			int Row = information_Tree_JPA.updateTreeContent(hashCode, jsonContent);
+			int Row = information_Head_JPA.updateProudctState(id,hashCode, state);
 			if (Row > 0) {
-				product_Tree.update_Information_Data(hashCode, jsonContent);
 				return true;
 			} else {
 				return false;
 			}
 
-		} else {
+		} else if (caseString.equals("Kid04")) {
+			int Row = information_Tree_JPA.updateProudctState(id,hashCode, state);
+			if (Row > 0) {
+				return true;
+			} else {
+				return false;
+			}
 
-		}
+		} else if (caseString.equals("Tree04")) {
+			int Row = information_Tree_JPA.updateProudctState(id,hashCode, state);
+			if (Row > 0) {
+				return true;
+			} else {
+				return false;
+			}
+
+		} 
 		return false;
 
 	}

@@ -24,8 +24,8 @@ public interface Information_Kid_JPA  extends JpaRepository<Product_Kid, Long>
 	
 	@Modifying
     @Transactional
- 	@Query("Update Product_Kid r SET r.showbool=?1" )
-	int updateProudctState(Boolean State); 
+ 	@Query("Update Product_Kid r SET r.showbool=?3 Where r.id=?1 AND r.hashcode=?2 " )
+	int updateProudctState(Long id,String hashCode,Boolean state); 
 	
 	
 	

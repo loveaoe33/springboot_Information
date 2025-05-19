@@ -27,7 +27,6 @@ public class Information_Service {
 	private Product_Kid product_Kid;
 	private Product_Tree product_Tree;
 	private ObjectMapper mapper;
-	
 
 	public Information_Service(Informatin_JPA_Controller informatin_JPA_Controller, Product_Head product_Head,
 			Product_Kid product_Kid, Product_Tree product_Tree, ObjectMapper mapper,
@@ -44,9 +43,11 @@ public class Information_Service {
 		Product_Admin admin = information_Admin_Service.get_Admin(id);
 		return admin;
 	}
-    public String delete_Check() {  //delete Information need to check
-    	return "sucess";
-    }
+
+	public String delete_Check() { // delete Information need to check
+		return "sucess";
+	}
+
 	public String get_Head() throws JsonProcessingException { // get all head data
 		String result = mapper.writeValueAsString(product_Head.get_Information_arrayData());
 		return result;
@@ -65,14 +66,13 @@ public class Information_Service {
 	}
 
 	public String insert_Information(Product_Interface data, String caseString) throws JsonProcessingException {
-		Product_Head datas= (Product_Head) data;
-		String [] adminSplite=datas.userString.split(",");
-		Product_Admin admin = admin_Check((long)Integer.parseInt(adminSplite[0]));
-		
-		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1]) && admin.getLevel()==Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1  ) {
-			System.out.println("有近來55"+caseString);
+		Product_Head datas = (Product_Head) data;
+		String[] adminSplite = datas.userString.split(",");
+		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
 
-			return (informatin_JPA_Controller.saveConnection(data, caseString, (long)0)) ? "sucess" : "fail";
+		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
+				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
+			return (informatin_JPA_Controller.saveConnection(data, caseString, (long) 0)) ? "sucess" : "fail";
 
 		} else {
 			return "Account has no permissions";
@@ -80,16 +80,37 @@ public class Information_Service {
 		}
 	}
 
-	public String delete_Information(Product_Interface data, String caseString,String hashcode, Long id) {
-		Product_Admin admin = admin_Check(id);
-		if (admin.getToken().equals(hashcode) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.deleteConnection(caseString, hashcode, id)) ? "sucess" : "fail";
+	public String delete_Information(Product_Interface data, String caseString) {
+		Product_Head datas = (Product_Head) data;
+		String[] adminSplite = datas.userString.split(",");
+		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
+		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
+				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
+			return (informatin_JPA_Controller.deleteConnection(caseString, datas.getHashcode(), (long) datas.getId()))
+					? "sucess"
+					: "fail";
 
 		} else {
 			return "Account has no permissions";
 
 		}
 
+	}
+	
+	public String update_State(Product_Interface data, String caseString) {
+		Product_Head datas = (Product_Head) data;
+		String[] adminSplite = datas.userString.split(",");
+		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
+		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
+				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
+			return (informatin_JPA_Controller.updateShow(caseString, (long) datas.getId(), datas.getHashcode(), datas.showbool)) ? "sucess" : "fail";
+			
+			
+		} else {
+			return "Account has no permissions";
+
+		}
+		
 	}
 
 	public String update_Information(String jsonContent, String hashCode, String caseString, Long id) {
@@ -104,14 +125,14 @@ public class Information_Service {
 		}
 
 	}
-	
+
 	public void update_NumberValue(String hashCode) {
-		HashMap<String,Integer> number=informatin_JPA_Controller.getNumberValue();
-		number.compute(hashCode, (Key,val)->val==null?1:val+1);
+		HashMap<String, Integer> number = informatin_JPA_Controller.getNumberValue();
+		number.compute(hashCode, (Key, val) -> val == null ? 1 : val + 1);
 	}
-	
-	public  String get_NumberValue() throws JsonProcessingException {
-		String result=mapper.writeValueAsString(informatin_JPA_Controller.getNumberValue());
+
+	public String get_NumberValue() throws JsonProcessingException {
+		String result = mapper.writeValueAsString(informatin_JPA_Controller.getNumberValue());
 		return result;
 	}
 

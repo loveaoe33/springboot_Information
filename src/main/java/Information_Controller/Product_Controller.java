@@ -24,16 +24,16 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 @RestController
-@ComponentScan(basePackages = { "Information_Config" ,"Information_Object", "Information_JPA", "Information_Server" })
+@ComponentScan(basePackages = { "Information_Config", "Information_Object", "Information_JPA", "Information_Server" })
 public class Product_Controller implements ErrorController {
 
 	private Information_Service information_Service;
 	private Product_Lib product_Lib;
 
 	@Autowired
-	public Product_Controller(Information_Service information_Service,Product_Lib product_Lib) {
+	public Product_Controller(Information_Service information_Service, Product_Lib product_Lib) {
 		this.information_Service = information_Service;
-		this.product_Lib=product_Lib;
+		this.product_Lib = product_Lib;
 	}
 
 	@Operation(summary = "新增種類區塊")
@@ -42,7 +42,7 @@ public class Product_Controller implements ErrorController {
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@PostMapping("Product_Imformation/setProduct_Information") // Insert Product select
 	public String post_Information(@RequestBody Product_Head data,
-			@Parameter(description = "事件選擇") @RequestParam String caseSelect) {// insert data
+			@Parameter(description = "新增事件選擇") @RequestParam String caseSelect) {// insert data
 
 		try {
 			switch (caseSelect) {
@@ -54,9 +54,8 @@ public class Product_Controller implements ErrorController {
 				data.setCreate_date("20250501");
 				data.setShowbool(true);
 				data.setCreate_name("Leo");
-				String x=information_Service.insert_Information(data, product_Lib.enumSelect(INFORMATION.Head,"Insert"));
-				System.out.println("Result"+x);
-				return "Sucess";
+
+				return information_Service.insert_Information(data, product_Lib.enumSelect(INFORMATION.Head, "Insert"));
 			case "midCase":
 				return "sucess";
 			case "minorCase":
@@ -78,11 +77,10 @@ public class Product_Controller implements ErrorController {
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@PostMapping("Product_Imformation/deleteProduct_Information") // delete Product select
 	public String delete_Information(@RequestBody Product_Head data,
-			@Parameter(description = "事件選擇") @RequestParam String caseSelect) {
-
+			@Parameter(description = "刪除事件選擇") @RequestParam String caseSelect) throws JsonProcessingException {
 		switch (caseSelect) {
-		case "majorCase":
-			return "sucess";
+		case "marjorCase":
+			return information_Service.delete_Information(data, product_Lib.enumSelect(INFORMATION.Head, "Delete"));
 		case "midCase":
 			return "sucess";
 		case "minorCase":
@@ -90,6 +88,7 @@ public class Product_Controller implements ErrorController {
 		default:
 			return "fail";
 		}
+
 	}
 
 	@Operation(summary = "取得標頭區塊")
@@ -145,9 +144,18 @@ public class Product_Controller implements ErrorController {
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@PostMapping("Product_Imformation/updateProduct_State") // Update Show State
-	public String update_Show_State() {
-		return null;
-	}
+	public String update_Show_State(@RequestBody Product_Head data,
+			@Parameter(description = "更新事件選擇") @RequestParam String caseSelect) {
+		switch (caseSelect) {
+		case "marjorCase":
+			return information_Service.update_State(data,product_Lib.enumSelect(INFORMATION.Head, "Delete"));
+		case "midCase":
+			return "sucess";
+		case "minorCase":
+			return "sucess";
+		default:
+			return "fail";
+		}	}
 
 	@Operation(summary = "更新點擊數")
 	@CrossOrigin

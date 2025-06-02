@@ -17,17 +17,23 @@ public interface Information_Tree_JPA extends JpaRepository<Product_Tree, Long>{
 	@Modifying
     @Transactional
 	@Query("Update Product_Tree r SET r.content_json=?2 WHERE r.hashcode=?1  ")
-	int updateTreeContent(String hashcode,String JsonContent);
+	int updateTreeContent(String hashCode,String JsonContent);
 	
 	@Modifying
     @Transactional
 	@Query("Update Product_Tree r SET r.focus_number=?2 WHERE r.hashcode=?1  ")
-	int updateTreeNumber(String hashcode,int JsonContent);
+	int updateTreeNumber(String hashCode,int touchValue);
 	
 	@Modifying
     @Transactional
 	@Query("Update Product_Tree r SET r.showbool=?3 Where r.id=?1 AND r.hashcode=?2 " )
 	int updateProudctState(Long id,String hashCode,Boolean state); 
+	
+	
+	
+    @Transactional
+	@Query("SELECT COUNT(r) FROM Product_Tree r WHERE r.kid_header = ?1")
+	int selectProductKidCode(String headCode); 
 	
 }
 

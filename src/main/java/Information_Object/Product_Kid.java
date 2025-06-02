@@ -37,8 +37,6 @@ public class Product_Kid implements Product_Interface {
 	public int id;
     @Schema(description = "區塊名稱", example = "健康套餐")
 	public String header;
-    @Schema(description = "子區塊識別碼", example = "")
-	public String kid_header;
     @Schema(description = "父區塊識別碼", example = "")
 	public String father_header;
     @Schema(description = "區塊識別碼", example = "")
@@ -52,6 +50,9 @@ public class Product_Kid implements Product_Interface {
 	public boolean showbool;
     @Schema(description = "點擊次數", example = "1")
 	public int focus_number;
+    @Transient
+    @Schema(description = "接收傳送使用者認證字串", example = "loveaoe33,456,0")
+    public String userString;
 	@Transient
 	public HashMap<String, String> datas = new HashMap<String, String>();
 

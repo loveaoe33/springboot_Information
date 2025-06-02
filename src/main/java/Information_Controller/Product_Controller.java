@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import Information_Object.Product_Head;
+import Information_Object.Product_Interface;
+import Information_Object.Product_Kid;
 import Information_Object.Product_Lib;
 import Information_Object.Product_Lib.INFORMATION;
 import Information_Server.Information_Admin_Service;
@@ -41,23 +43,32 @@ public class Product_Controller implements ErrorController {
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@PostMapping("Product_Imformation/setProduct_Information") // Insert Product select
-	public String post_Information(@RequestBody Product_Head data,
+	public String post_Information(@RequestBody Product_Interface postData,
 			@Parameter(description = "新增事件選擇") @RequestParam String caseSelect) {// insert data
 
 		try {
 			switch (caseSelect) {
 			case "marjorCase":
-				System.out.println("Body:" + data.header + "User:" + data.userString);
-				data.setHashcode("123");
-				data.setKid_header("123");
-				data.setTree_header("123");
-				data.setCreate_date("20250501");
-				data.setShowbool(true);
-				data.setCreate_name("Leo");
-
-				return information_Service.insert_Information(data, product_Lib.enumSelect(INFORMATION.Head, "Insert"));
+				Product_Head headData = (Product_Head) postData;
+				String[] headSplite = headData.getUserString().split(",");
+				String headAccount = headSplite[1];
+				headData.setHashcode(product_Lib.getHash(headData.getHeader(), product_Lib.getDate()));
+				headData.setCreate_date(product_Lib.getDate());
+				headData.setShowbool(true);
+				headData.setCreate_name(headAccount);
+				return information_Service.insert_Information(headData,
+						product_Lib.enumSelect(INFORMATION.Head, "Insert"), headData.getUserString());
 			case "midCase":
-				return "sucess";
+				Product_Kid kidData = (Product_Kid) postData;
+				String[] kidSplite = kidData.getUserString().split(",");
+				String kidAccount = kidSplite[1];
+				kidData.setHashcode(product_Lib.getHash(kidData.getHeader(), product_Lib.getDate()));
+				kidData.setCreate_date(product_Lib.getDate());
+				kidData.setShowbool(true);
+				kidData.setCreate_name(kidAccount);
+				return information_Service.insert_Information(kidData,
+						product_Lib.enumSelect(INFORMATION.Kid, "Insert"), kidData.getUserString());
+
 			case "minorCase":
 				return "sucess";
 			default:
@@ -76,13 +87,19 @@ public class Product_Controller implements ErrorController {
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@PostMapping("Product_Imformation/deleteProduct_Information") // delete Product select
-	public String delete_Information(@RequestBody Product_Head data,
+	public String delete_Information(@RequestBody Product_Interface postData,
 			@Parameter(description = "刪除事件選擇") @RequestParam String caseSelect) throws JsonProcessingException {
+
 		switch (caseSelect) {
 		case "marjorCase":
-			return information_Service.delete_Information(data, product_Lib.enumSelect(INFORMATION.Head, "Delete"));
+			Product_Head headData = (Product_Head) postData;
+
+			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Head, "Delete"),
+					headData.getUserString(), headData.getHashcode(), (long) headData.getId());
 		case "midCase":
-			return "sucess";
+			Product_Kid kidData = (Product_Kid) postData;
+			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Kid, "Delete"),
+					kidData.getUserString(), kidData.getHashcode(), (long) kidData.getId());
 		case "minorCase":
 			return "sucess";
 		default:
@@ -97,7 +114,13 @@ public class Product_Controller implements ErrorController {
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@GetMapping("Product_Imformation/getProduct_Information") // Get Header
 	public String get_Head_Information() {
-		return null;
+		try {
+			return information_Service.get_Head();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "fail";
+		}
 	}
 
 	@Operation(summary = "取得子項區塊")
@@ -106,7 +129,14 @@ public class Product_Controller implements ErrorController {
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@GetMapping("Product_Imformation/getProduct_Kid_Information") // Get Kid Header
 	public String get_Kid_Information() {
-		return null;
+		try {
+			System.out.println("123" + information_Service.get_Kid());
+			return information_Service.get_Kid();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "fail";
+		}
 	}
 
 	@Operation(summary = "取得細項區塊")
@@ -116,7 +146,13 @@ public class Product_Controller implements ErrorController {
 	@GetMapping("Product_Imformation/getProduct_Tree_Information") // Get Tree
 	public String get_Tree_Information() {
 
-		return null;
+		try {
+			return information_Service.get_Tree();
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "fail";
+		}
 	}
 
 	@Operation(summary = "取得細項明細")
@@ -144,18 +180,37 @@ public class Product_Controller implements ErrorController {
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@PostMapping("Product_Imformation/updateProduct_State") // Update Show State
-	public String update_Show_State(@RequestBody Product_Head data,
+	public String update_Show_State(@RequestBody Product_Interface postData,
 			@Parameter(description = "更新事件選擇") @RequestParam String caseSelect) {
-		switch (caseSelect) {
-		case "marjorCase":
-			return information_Service.update_State(data,product_Lib.enumSelect(INFORMATION.Head, "Delete"));
-		case "midCase":
-			return "sucess";
-		case "minorCase":
-			return "sucess";
-		default:
-			return "fail";
-		}	}
+
+		try {
+			System.out.println("4");
+			switch (caseSelect) {
+			case "marjorCase":
+				Product_Head headData = (Product_Head) postData;
+
+				return information_Service.update_State( product_Lib.enumSelect(INFORMATION.Head, "State"),
+						headData.getHashcode(), (long) headData.getId(), headData.isShowbool(),
+						headData.getUserString());
+
+			case "midCase":
+				Product_Kid kidData = (Product_Kid) postData;
+
+				return information_Service.update_State( product_Lib.enumSelect(INFORMATION.Kid, "State"),
+						kidData.getHashcode(), (long) kidData.getId(), kidData.isShowbool(), kidData.getUserString());
+			case "minorCase":
+				return "sucess";
+			default:
+				return "fail";
+			}
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "sql exception";
+
+		}
+	}
 
 	@Operation(summary = "更新點擊數")
 	@CrossOrigin

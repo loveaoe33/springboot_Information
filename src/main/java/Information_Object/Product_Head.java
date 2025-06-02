@@ -37,10 +37,6 @@ public class Product_Head implements Product_Interface {
 	public int id;
     @Schema(description = "大項抬頭", example = "藥局")
 	public String header;
-    @Schema(description = "中項hashCode", example = "&*^*&^*SHIUH")
-	public String kid_header;
-    @Schema(description = "小項hashCode", example = "&*^*&as22^*SHIUH")
-	public String tree_header;
     @Schema(description = "大項項hashCode", example = "&*^*dsa&^*SHIUH")
 	public String hashcode;
     @Schema(description = "建立日期", example = "20250402")

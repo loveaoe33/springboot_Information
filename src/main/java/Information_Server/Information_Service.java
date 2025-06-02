@@ -1,8 +1,10 @@
 package Information_Server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hibernate.mapping.List;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
@@ -65,13 +67,16 @@ public class Information_Service {
 		return result;
 	}
 
-	public String insert_Information(Product_Interface data, String caseString) throws JsonProcessingException {
-		Product_Head datas = (Product_Head) data;
-		String[] adminSplite = datas.userString.split(",");
+	public String insert_Information(Product_Interface data, String caseString,String userString) throws JsonProcessingException {
+
+
+
+		String[] adminSplite = userString.split(",");
 		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
 
 		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
 				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
+
 			return (informatin_JPA_Controller.saveConnection(data, caseString, (long) 0)) ? "sucess" : "fail";
 
 		} else {
@@ -80,13 +85,13 @@ public class Information_Service {
 		}
 	}
 
-	public String delete_Information(Product_Interface data, String caseString) {
-		Product_Head datas = (Product_Head) data;
-		String[] adminSplite = datas.userString.split(",");
+	public String delete_Information( String caseString,String userString,String hashCode,long id) {
+		
+		String[] adminSplite = userString.split(",");
 		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
 		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
 				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.deleteConnection(caseString, datas.getHashcode(), (long) datas.getId()))
+			return (informatin_JPA_Controller.deleteConnection(caseString, hashCode, id))
 					? "sucess"
 					: "fail";
 
@@ -96,21 +101,21 @@ public class Information_Service {
 		}
 
 	}
-	
-	public String update_State(Product_Interface data, String caseString) {
-		Product_Head datas = (Product_Head) data;
-		String[] adminSplite = datas.userString.split(",");
+
+	public String update_State(String caseString ,String hasCode,long id,boolean showbool ,String userString) throws JsonProcessingException {
+		String[] adminSplite = userString.split(",");
 		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
+
 		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
 				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.updateShow(caseString, (long) datas.getId(), datas.getHashcode(), datas.showbool)) ? "sucess" : "fail";
-			
-			
+			return (informatin_JPA_Controller.updateShow(caseString, id, hasCode,
+					showbool)) ? "sucess" : "fail";
+
 		} else {
 			return "Account has no permissions";
 
 		}
-		
+
 	}
 
 	public String update_Information(String jsonContent, String hashCode, String caseString, Long id) {

@@ -4,7 +4,11 @@ import java.util.function.BiFunction;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,8 +38,6 @@ public class Product_Lib {
 	}
 
 	public String enumSelect(INFORMATION select, String caseSelect) {
-	    System.out.println("輸入: " + select);
-
 	    return switch (select) {
 	        case Head, Kid, Tree -> choiceSelect(select.name(), caseSelect);
 	        default -> "fail";
@@ -46,6 +48,7 @@ public class Product_Lib {
 		switch (information + "_" + caseSelect) {
 		case "Head_Insert" -> {
 			return "Head01";
+			
 		}
 		case "Head_Delete" -> {
 			return "Head02";
@@ -61,7 +64,7 @@ public class Product_Lib {
 
 		}
 		case "Kid_Delete" -> {
-			return "Head02";
+			return "Kid02";
 		}
 		case "Kid_Update" -> {
 			return "Kid03";
@@ -76,7 +79,7 @@ public class Product_Lib {
 
 		}
 		case "Tree_Delete" -> {
-			return "Head02";
+			return "Tree02";
 		}
 		case "Tree_Update" -> {
 			return "Tree03";
@@ -92,16 +95,31 @@ public class Product_Lib {
 	}
 
 	public String getDate() { // get local date
-		LocalDate date = LocalDate.now();
+		LocalDateTime dateTime = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-		String formatteDate = date.format(formatter);
+		String formatteDate = dateTime.format(formatter);
 		return formatteDate;
 	}
 
 	public String getHash(String title, String date) { // get class hashcode
-		BiFunction<String, String, Integer> generateHashCode = (data1, data2) -> (data1 + data2).hashCode();
-		int code = generateHashCode.apply(title, date);
-		String res = Integer.toString(code);
-		return res;
+//		BiFunction<String, String, Integer> generateHashCode = (data1, data2) -> (data1 + data2).hashCode();
+//		int code = generateHashCode.apply(title, date);
+//		String res = Integer.toString(code);
+		
+		MessageDigest digest;
+		try {
+			digest = MessageDigest.getInstance("SHA-256");
+			byte hash[]=digest.digest((title+date).getBytes(StandardCharsets.UTF_8));
+			StringBuilder builder=new StringBuilder();
+			for(byte b: hash) {
+				builder.append(String.format("%02x", b));
+			}
+			return builder.toString();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "hashError";
+		}
+
 	}
 }

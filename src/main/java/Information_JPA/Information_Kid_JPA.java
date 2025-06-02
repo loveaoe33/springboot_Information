@@ -28,6 +28,17 @@ public interface Information_Kid_JPA  extends JpaRepository<Product_Kid, Long>
 	int updateProudctState(Long id,String hashCode,Boolean state); 
 	
 	
+    @Transactional
+	@Query("SELECT COUNT(r) FROM Product_Kid r WHERE r.father_header = ?1")
+	int selectProductHeadCode(String headCode); 
+    
+    
+	
+	@Transactional
+	@Query("SELECT r FROM Product_Kid r WHERE r.id = ?1 AND r.hashcode = ?2")
+	Product_Kid selectUpdateData(Long id, String hashCode);
 	
 }
+
+
 

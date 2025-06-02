@@ -42,9 +42,7 @@ public class Product_Tree implements Product_Interface{
     @Schema(description = "大項抬頭", example = "藥局")
 	public String header;
     @Schema(description = "父層識別碼", example = "")
-	public String father_header;
-    @Schema(description = "頂層識別碼", example = "")
-	public String top_header;
+	public String kid_header;
     @Schema(description = "類別識別碼", example = "")
 	public String hashcode;
     @Schema(description = "建立日期", example = "20250101")
@@ -60,6 +58,8 @@ public class Product_Tree implements Product_Interface{
 	public boolean showbool;
     @Schema(description = "類別json細項", example = "")
 	public String content_json;
+    @Schema(description = "接收傳送使用者認證字串", example = "loveaoe33,456,0")
+    public String userString;
 	@Transient
 	public HashMap<String,String> datas=new HashMap<String,String>();
 

@@ -17,6 +17,7 @@ import Information_Object.Product_Interface;
 import Information_Object.Product_Kid;
 import Information_Object.Product_Lib;
 import Information_Object.Product_Lib.INFORMATION;
+import Information_Object.Product_Tree;
 import Information_Server.Information_Admin_Service;
 import Information_Server.Information_Service;
 import io.swagger.v3.oas.annotations.Operation;
@@ -70,7 +71,15 @@ public class Product_Controller implements ErrorController {
 						product_Lib.enumSelect(INFORMATION.Kid, "Insert"), kidData.getUserString());
 
 			case "minorCase":
-				return "sucess";
+				Product_Tree treeData = (Product_Tree) postData;
+				String[] treeSplite = treeData.getUserString().split(",");
+				String treeAccount = treeSplite[1];
+				treeData.setHashcode(product_Lib.getHash(treeData.getHeader(), product_Lib.getDate()));
+				treeData.setCreate_date(product_Lib.getDate());
+				treeData.setShowbool(true);
+				treeData.setCreate_name(treeAccount);
+				return information_Service.insert_Information(treeData,
+						product_Lib.enumSelect(INFORMATION.Tree, "Insert"), treeData.getUserString());				
 			default:
 				return "fail";
 			}
@@ -101,8 +110,12 @@ public class Product_Controller implements ErrorController {
 			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Kid, "Delete"),
 					kidData.getUserString(), kidData.getHashcode(), (long) kidData.getId());
 		case "minorCase":
-			return "sucess";
-		default:
+			
+			Product_Tree treeData = (Product_Tree) postData;
+
+			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Tree, "Delete"),
+					treeData.getUserString(), treeData.getHashcode(), (long) treeData.getId());
+			default:
 			return "fail";
 		}
 
@@ -184,7 +197,6 @@ public class Product_Controller implements ErrorController {
 			@Parameter(description = "更新事件選擇") @RequestParam String caseSelect) {
 
 		try {
-			System.out.println("4");
 			switch (caseSelect) {
 			case "marjorCase":
 				Product_Head headData = (Product_Head) postData;
@@ -199,8 +211,11 @@ public class Product_Controller implements ErrorController {
 				return information_Service.update_State( product_Lib.enumSelect(INFORMATION.Kid, "State"),
 						kidData.getHashcode(), (long) kidData.getId(), kidData.isShowbool(), kidData.getUserString());
 			case "minorCase":
-				return "sucess";
-			default:
+				Product_Tree treeData = (Product_Tree) postData;
+
+				return information_Service.update_State( product_Lib.enumSelect(INFORMATION.Tree, "State"),
+						treeData.getHashcode(), (long) treeData.getId(), treeData.isShowbool(), treeData.getUserString());	
+				default:
 				return "fail";
 			}
 

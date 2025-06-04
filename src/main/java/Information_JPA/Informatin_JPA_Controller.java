@@ -108,7 +108,7 @@ public class Informatin_JPA_Controller {
 			return false;
 		} else if (caseString.equals("Tree01")) {
 			Product_Tree productTree = (Product_Tree) data;
-			if (data instanceof Product_Head) {
+			if (data instanceof Product_Tree) {
 				Product_Tree result = information_Tree_JPA.save(productTree);
 				product_Tree.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
 				return true;
@@ -185,6 +185,7 @@ public class Informatin_JPA_Controller {
 
 	public boolean updateShow(String caseString, Long id, String hashCode, boolean state)
 			throws JsonProcessingException { // update view
+		    System.out.println("566"+caseString+id+hashCode);
 		if (caseString.equals("Head04")) {
 			int Row = information_Head_JPA.updateProudctState(id, hashCode, state);
 			Product_Head data = information_Head_JPA.selectUpdateData(id, hashCode);
@@ -206,7 +207,11 @@ public class Informatin_JPA_Controller {
 			}
 		} else if (caseString.equals("Tree04")) {
 			int Row = information_Tree_JPA.updateProudctState(id, hashCode, state);
-			if (Row > 0) {
+			Product_Tree data = information_Tree_JPA.selectUpdateData(id, hashCode);
+		    System.out.println("5766"+data+Row);
+
+			if (Row > 0 && data != null) {
+				product_Tree.set_Information_Data(data.getHashcode(), mapper.writeValueAsString(data));
 				return true;
 			} else {
 				return false;

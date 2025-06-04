@@ -58,6 +58,7 @@ public class Product_Tree implements Product_Interface{
 	public boolean showbool;
     @Schema(description = "類別json細項", example = "")
 	public String content_json;
+    @Transient
     @Schema(description = "接收傳送使用者認證字串", example = "loveaoe33,456,0")
     public String userString;
 	@Transient

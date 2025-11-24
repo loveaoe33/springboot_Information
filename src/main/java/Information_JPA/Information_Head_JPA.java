@@ -15,12 +15,6 @@ public interface Information_Head_JPA extends JpaRepository<Product_Head, Long>{
  	@Query("Update Product_Head r SET r.showbool=?3 Where r.id=?1 AND r.hashcode=?2 " )
 	int updateProudctState(Long id,String hashCode,Boolean state); 
 	
-	
-
-		
-	
-	
-	
 	@Transactional
 	@Query("SELECT r FROM Product_Head r WHERE r.id = ?1 AND r.hashcode = ?2")
 	Product_Head selectUpdateData(Long id, String hashCode);

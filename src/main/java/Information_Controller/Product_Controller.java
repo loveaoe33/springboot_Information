@@ -79,7 +79,7 @@ public class Product_Controller implements ErrorController {
 				treeData.setShowbool(true);
 				treeData.setCreate_name(treeAccount);
 				return information_Service.insert_Information(treeData,
-						product_Lib.enumSelect(INFORMATION.Tree, "Insert"), treeData.getUserString());				
+						product_Lib.enumSelect(INFORMATION.Tree, "Insert"), treeData.getUserString());
 			default:
 				return "fail";
 			}
@@ -88,7 +88,6 @@ public class Product_Controller implements ErrorController {
 			e.printStackTrace();
 			return "sql exception";
 		}
-
 	}
 
 	@Operation(summary = "刪除種類區塊")
@@ -98,11 +97,9 @@ public class Product_Controller implements ErrorController {
 	@PostMapping("Product_Imformation/deleteProduct_Information") // delete Product select
 	public String delete_Information(@RequestBody Product_Interface postData,
 			@Parameter(description = "刪除事件選擇") @RequestParam String caseSelect) throws JsonProcessingException {
-
 		switch (caseSelect) {
 		case "marjorCase":
 			Product_Head headData = (Product_Head) postData;
-
 			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Head, "Delete"),
 					headData.getUserString(), headData.getHashcode(), (long) headData.getId());
 		case "midCase":
@@ -110,12 +107,10 @@ public class Product_Controller implements ErrorController {
 			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Kid, "Delete"),
 					kidData.getUserString(), kidData.getHashcode(), (long) kidData.getId());
 		case "minorCase":
-			
 			Product_Tree treeData = (Product_Tree) postData;
-
 			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Tree, "Delete"),
 					treeData.getUserString(), treeData.getHashcode(), (long) treeData.getId());
-			default:
+		default:
 			return "fail";
 		}
 
@@ -158,7 +153,6 @@ public class Product_Controller implements ErrorController {
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@GetMapping("Product_Imformation/getProduct_Tree_Information") // Get Tree
 	public String get_Tree_Information() {
-
 		try {
 			return information_Service.get_Tree();
 		} catch (JsonProcessingException e) {
@@ -168,54 +162,36 @@ public class Product_Controller implements ErrorController {
 		}
 	}
 
-	@Operation(summary = "取得細項明細")
+	@Operation(summary = "取得商品明細")
 	@CrossOrigin
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
-	@GetMapping("Product_Imformation/getProduct_Tree_Detail") // Get Detail
-	public String get_Tree_Detail() {
-
-		return null;
+	@GetMapping("Product_Imformation/get_Product_Detail") // Get Number
+	public String get_Product_Detail(@RequestParam String productId) throws JsonProcessingException {
+		return information_Service.get_Product_Detail(Long.parseLong(productId));
 	}
 
-	@Operation(summary = "更新細項明細")
+	@Operation(summary = "更新細項產品內容")
 	@CrossOrigin
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
-	@GetMapping("Product_Imformation/updateProduct_Tree_Detail") // Get Detail
-	public String update_Tree_Detail() {
-
-		return null;
-	}
-
-	@Operation(summary = "更新區塊狀態")
-	@CrossOrigin
-	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
-			@ApiResponse(responseCode = "400", description = "參數錯誤") })
-	@PostMapping("Product_Imformation/updateProduct_State") // Update Show State
-	public String update_Show_State(@RequestBody Product_Interface postData,
+	@PostMapping("Product_Imformation/update_Product_Detail") // Post Detail
+	public String update_Product_Detail(@RequestBody Product_Interface postData,
 			@Parameter(description = "更新事件選擇") @RequestParam String caseSelect) {
-
 		try {
 			switch (caseSelect) {
 			case "marjorCase":
-				Product_Head headData = (Product_Head) postData;
-
-				return information_Service.update_State( product_Lib.enumSelect(INFORMATION.Head, "State"),
-						headData.getHashcode(), (long) headData.getId(), headData.isShowbool(),
-						headData.getUserString());
+			      return "fail";
 
 			case "midCase":
-				Product_Kid kidData = (Product_Kid) postData;
+			      return "fail";
 
-				return information_Service.update_State( product_Lib.enumSelect(INFORMATION.Kid, "State"),
-						kidData.getHashcode(), (long) kidData.getId(), kidData.isShowbool(), kidData.getUserString());
 			case "minorCase":
 				Product_Tree treeData = (Product_Tree) postData;
-
-				return information_Service.update_State( product_Lib.enumSelect(INFORMATION.Tree, "State"),
-						treeData.getHashcode(), (long) treeData.getId(), treeData.isShowbool(), treeData.getUserString());	
-				default:
+				return information_Service.update_Content(product_Lib.enumSelect(INFORMATION.Tree, "Update"),
+						treeData.getHashcode(), (long) treeData.getId(),treeData.getContent_json(),
+						treeData.getUserString());
+			default:
 				return "fail";
 			}
 
@@ -223,7 +199,42 @@ public class Product_Controller implements ErrorController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "sql exception";
+		}
+	}
+	
+	@Operation(summary = "更新區塊狀態")
+	@CrossOrigin
+	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
+			@ApiResponse(responseCode = "400", description = "參數錯誤") })
+	@PostMapping("Product_Imformation/updateProduct_State") // Update Show State
+	public String update_Show_State(
+			@RequestBody Product_Interface postData,
+			@Parameter(description = "更新事件選擇") @RequestParam String caseSelect) {
 
+		try {
+			switch (caseSelect) {
+			case "marjorCase":
+				Product_Head headData = (Product_Head) postData;
+				return information_Service.update_State(product_Lib.enumSelect(INFORMATION.Head, "State"),
+						headData.getHashcode(), (long) headData.getId(), headData.isShowbool(),
+						headData.getUserString());
+			case "midCase":
+				Product_Kid kidData = (Product_Kid) postData;
+				return information_Service.update_State(product_Lib.enumSelect(INFORMATION.Kid, "State"),
+						kidData.getHashcode(), (long) kidData.getId(), kidData.isShowbool(), kidData.getUserString());
+			case "minorCase":
+				Product_Tree treeData = (Product_Tree) postData;
+				return information_Service.update_State(product_Lib.enumSelect(INFORMATION.Tree, "State"),
+						treeData.getHashcode(), (long) treeData.getId(), treeData.isShowbool(),
+						treeData.getUserString());
+			default:
+				return "fail";
+			}
+
+		} catch (JsonProcessingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return "sql exception";
 		}
 	}
 

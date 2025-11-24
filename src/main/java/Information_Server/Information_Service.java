@@ -58,58 +58,46 @@ public class Information_Service {
 	public String get_Kid() throws JsonProcessingException {// get all kid data
 		String result = mapper.writeValueAsString(product_Kid.get_Information_arrayData());
 		return result;
-
 	}
 
 	public String get_Tree() throws JsonProcessingException {// get all tree data
-
 		String result = mapper.writeValueAsString(product_Tree.get_Information_arrayData());
 		return result;
 	}
 
-	public String insert_Information(Product_Interface data, String caseString,String userString) throws JsonProcessingException {
-
-
+	public String insert_Information(Product_Interface data, String caseString, String userString)
+			throws JsonProcessingException {
 
 		String[] adminSplite = userString.split(",");
 		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
-
 		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
 				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
-
 			return (informatin_JPA_Controller.saveConnection(data, caseString, (long) 0)) ? "sucess" : "fail";
-
 		} else {
 			return "Account has no permissions";
-
 		}
 	}
 
-	public String delete_Information( String caseString,String userString,String hashCode,long id) {
-		
+	public String delete_Information(String caseString, String userString, String hashCode, long id) {
+
 		String[] adminSplite = userString.split(",");
 		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
 		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
 				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.deleteConnection(caseString, hashCode, id))
-					? "sucess"
-					: "fail";
-
+			return (informatin_JPA_Controller.deleteConnection(caseString, hashCode, id)) ? "sucess" : "fail";
 		} else {
 			return "Account has no permissions";
-
 		}
-
 	}
 
-	public String update_State(String caseString ,String hasCode,long id,boolean showbool ,String userString) throws JsonProcessingException {
+	public String update_State(String caseString, String hasCode, long id, boolean showbool, String userString)
+			throws JsonProcessingException {
 		String[] adminSplite = userString.split(",");
 		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
 
 		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
 				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.updateShow(caseString, id, hasCode,
-					showbool)) ? "sucess" : "fail";
+			return (informatin_JPA_Controller.updateShow(caseString, id, hasCode, showbool)) ? "sucess" : "fail";
 
 		} else {
 			return "Account has no permissions";
@@ -118,12 +106,15 @@ public class Information_Service {
 
 	}
 
-	public String update_Information(String jsonContent, String hashCode, String caseString, Long id) {
-		Product_Admin admin = admin_Check(id);
-		if (admin.getToken().equals(hashCode) && admin.getLevel() <= 1) {
-			return (informatin_JPA_Controller.updateConnection(jsonContent, hashCode, caseString, id)) ? "sucess"
-					: "fail";
+	public String update_Content(String caseString, String hasCode, long id, String content_json, String userString)
+			throws JsonProcessingException {
+		String[] adminSplite = userString.split(",");
+		Product_Admin admin = admin_Check((long) Integer.parseInt(adminSplite[0]));
 
+		if (admin.getToken().equals(adminSplite[2]) && admin.getAccount().equals(adminSplite[1])
+				&& admin.getLevel() == Integer.parseInt(adminSplite[3]) && admin.getLevel() <= 1) {
+			return (informatin_JPA_Controller.updateConnection(caseString, content_json, hasCode, id)) ? "sucess"
+					: "fail";
 		} else {
 			return "Account has no permissions";
 
@@ -139,6 +130,12 @@ public class Information_Service {
 	public String get_NumberValue() throws JsonProcessingException {
 		String result = mapper.writeValueAsString(informatin_JPA_Controller.getNumberValue());
 		return result;
+	}
+
+	public String get_Product_Detail(Long id) throws JsonProcessingException {
+		String result = mapper.writeValueAsString(informatin_JPA_Controller.get_Product_Detail(id));
+		return result;
+
 	}
 
 }

@@ -52,8 +52,6 @@ public class Product_Tree implements Product_Interface{
 	public String create_name;
     @Schema(description = "點擊次數", example = "1")
 	public int focus_number;
-    @Schema(description = "圖片雲網址", example = "https://test/img")
-	public String img_url;
     @Schema(description = "類別狀態", example = "true")
 	public boolean showbool;
     @Schema(description = "類別json細項", example = "")

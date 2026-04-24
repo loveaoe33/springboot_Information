@@ -1,3 +1,4 @@
+// Refactored by AI on April 24, 2026
 package Information_Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import Information_Server.Information_Admin_Service;
 import Information_Server.Information_Service;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -30,8 +30,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 @ComponentScan(basePackages = { "Information_Config", "Information_Object", "Information_JPA", "Information_Server" })
 public class Product_Controller implements ErrorController {
 
-	private Information_Service information_Service;
-	private Product_Lib product_Lib;
+	private final Information_Service information_Service;
+	private final Product_Lib product_Lib;
 
 	@Autowired
 	public Product_Controller(Information_Service information_Service, Product_Lib product_Lib) {
@@ -48,43 +48,37 @@ public class Product_Controller implements ErrorController {
 			@Parameter(description = "新增事件選擇") @RequestParam String caseSelect) {// insert data
 
 		try {
-			switch (caseSelect) {
-			case "marjorCase":
-				Product_Head headData = (Product_Head) postData;
-				String[] headSplite = headData.getUserString().split(",");
-				String headAccount = headSplite[1];
-				headData.setHashcode(product_Lib.getHash(headData.getHeader(), product_Lib.getDate()));
-				headData.setCreate_date(product_Lib.getDate());
-				headData.setShowbool(true);
-				headData.setCreate_name(headAccount);
-				return information_Service.insert_Information(headData,
-						product_Lib.enumSelect(INFORMATION.Head, "Insert"), headData.getUserString());
-			case "midCase":
-				Product_Kid kidData = (Product_Kid) postData;
-				String[] kidSplite = kidData.getUserString().split(",");
-				String kidAccount = kidSplite[1];
-				kidData.setHashcode(product_Lib.getHash(kidData.getHeader(), product_Lib.getDate()));
-				kidData.setCreate_date(product_Lib.getDate());
-				kidData.setShowbool(true);
-				kidData.setCreate_name(kidAccount);
-				return information_Service.insert_Information(kidData,
-						product_Lib.enumSelect(INFORMATION.Kid, "Insert"), kidData.getUserString());
-
-			case "minorCase":
-				Product_Tree treeData = (Product_Tree) postData;
-				String[] treeSplite = treeData.getUserString().split(",");
-				String treeAccount = treeSplite[1];
-				treeData.setHashcode(product_Lib.getHash(treeData.getHeader(), product_Lib.getDate()));
-				treeData.setCreate_date(product_Lib.getDate());
-				treeData.setShowbool(true);
-				treeData.setCreate_name(treeAccount);
-				return information_Service.insert_Information(treeData,
-						product_Lib.enumSelect(INFORMATION.Tree, "Insert"), treeData.getUserString());
-			default:
-				return "fail";
-			}
+			return switch (caseSelect) {
+				case "marjorCase" -> {
+					Product_Head headData = (Product_Head) postData;
+					String headAccount = headData.getUserString().split(",")[1];
+					headData.setHashcode(product_Lib.getHash(headData.getHeader(), product_Lib.getDate()));
+					headData.setCreate_date(product_Lib.getDate());
+					headData.setShowbool(true);
+					headData.setCreate_name(headAccount);
+					yield information_Service.insert_Information(headData, product_Lib.enumSelect(INFORMATION.Head, "Insert"), headData.getUserString());
+				}
+				case "midCase" -> {
+					Product_Kid kidData = (Product_Kid) postData;
+					String kidAccount = kidData.getUserString().split(",")[1];
+					kidData.setHashcode(product_Lib.getHash(kidData.getHeader(), product_Lib.getDate()));
+					kidData.setCreate_date(product_Lib.getDate());
+					kidData.setShowbool(true);
+					kidData.setCreate_name(kidAccount);
+					yield information_Service.insert_Information(kidData, product_Lib.enumSelect(INFORMATION.Kid, "Insert"), kidData.getUserString());
+				}
+				case "minorCase" -> {
+					Product_Tree treeData = (Product_Tree) postData;
+					String treeAccount = treeData.getUserString().split(",")[1];
+					treeData.setHashcode(product_Lib.getHash(treeData.getHeader(), product_Lib.getDate()));
+					treeData.setCreate_date(product_Lib.getDate());
+					treeData.setShowbool(true);
+					treeData.setCreate_name(treeAccount);
+					yield information_Service.insert_Information(treeData, product_Lib.enumSelect(INFORMATION.Tree, "Insert"), treeData.getUserString());
+				}
+				default -> "fail";
+			};
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "sql exception";
 		}
@@ -97,23 +91,21 @@ public class Product_Controller implements ErrorController {
 	@PostMapping("Product_Imformation/deleteProduct_Information") // delete Product select
 	public String delete_Information(@RequestBody Product_Interface postData,
 			@Parameter(description = "刪除事件選擇") @RequestParam String caseSelect) throws JsonProcessingException {
-		switch (caseSelect) {
-		case "marjorCase":
-			Product_Head headData = (Product_Head) postData;
-			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Head, "Delete"),
-					headData.getUserString(), headData.getHashcode(), (long) headData.getId());
-		case "midCase":
-			Product_Kid kidData = (Product_Kid) postData;
-			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Kid, "Delete"),
-					kidData.getUserString(), kidData.getHashcode(), (long) kidData.getId());
-		case "minorCase":
-			Product_Tree treeData = (Product_Tree) postData;
-			return information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Tree, "Delete"),
-					treeData.getUserString(), treeData.getHashcode(), (long) treeData.getId());
-		default:
-			return "fail";
-		}
-
+		return switch (caseSelect) {
+			case "marjorCase" -> {
+				Product_Head headData = (Product_Head) postData;
+				yield information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Head, "Delete"), headData.getUserString(), headData.getHashcode(), (long) headData.getId());
+			}
+			case "midCase" -> {
+				Product_Kid kidData = (Product_Kid) postData;
+				yield information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Kid, "Delete"), kidData.getUserString(), kidData.getHashcode(), (long) kidData.getId());
+			}
+			case "minorCase" -> {
+				Product_Tree treeData = (Product_Tree) postData;
+				yield information_Service.delete_Information(product_Lib.enumSelect(INFORMATION.Tree, "Delete"), treeData.getUserString(), treeData.getHashcode(), (long) treeData.getId());
+			}
+			default -> "fail";
+		};
 	}
 
 	@Operation(summary = "取得標頭區塊")
@@ -125,7 +117,6 @@ public class Product_Controller implements ErrorController {
 		try {
 			return information_Service.get_Head();
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "fail";
 		}
@@ -138,10 +129,8 @@ public class Product_Controller implements ErrorController {
 	@GetMapping("Product_Imformation/getProduct_Kid_Information") // Get Kid Header
 	public String get_Kid_Information() {
 		try {
-			System.out.println("123" + information_Service.get_Kid());
 			return information_Service.get_Kid();
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "fail";
 		}
@@ -156,7 +145,6 @@ public class Product_Controller implements ErrorController {
 		try {
 			return information_Service.get_Tree();
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "fail";
 		}
@@ -179,24 +167,17 @@ public class Product_Controller implements ErrorController {
 	public String update_Product_Detail(@RequestBody Product_Interface postData,
 			@Parameter(description = "更新事件選擇") @RequestParam String caseSelect) {
 		try {
-			switch (caseSelect) {
-			case "marjorCase":
-			      return "fail";
-
-			case "midCase":
-			      return "fail";
-
-			case "minorCase":
-				Product_Tree treeData = (Product_Tree) postData;
-				return information_Service.update_Content(product_Lib.enumSelect(INFORMATION.Tree, "Update"),
-						treeData.getHashcode(), (long) treeData.getId(),treeData.getContent_json(),
-						treeData.getUserString());
-			default:
-				return "fail";
-			}
-
+			return switch (caseSelect) {
+				case "marjorCase", "midCase" -> "fail";
+				case "minorCase" -> {
+					Product_Tree treeData = (Product_Tree) postData;
+					yield information_Service.update_Content(product_Lib.enumSelect(INFORMATION.Tree, "Update"),
+							treeData.getHashcode(), (long) treeData.getId(), treeData.getContent_json(),
+							treeData.getUserString());
+				}
+				default -> "fail";
+			};
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "sql exception";
 		}
@@ -212,27 +193,25 @@ public class Product_Controller implements ErrorController {
 			@Parameter(description = "更新事件選擇") @RequestParam String caseSelect) {
 
 		try {
-			switch (caseSelect) {
-			case "marjorCase":
-				Product_Head headData = (Product_Head) postData;
-				return information_Service.update_State(product_Lib.enumSelect(INFORMATION.Head, "State"),
-						headData.getHashcode(), (long) headData.getId(), headData.isShowbool(),
-						headData.getUserString());
-			case "midCase":
-				Product_Kid kidData = (Product_Kid) postData;
-				return information_Service.update_State(product_Lib.enumSelect(INFORMATION.Kid, "State"),
-						kidData.getHashcode(), (long) kidData.getId(), kidData.isShowbool(), kidData.getUserString());
-			case "minorCase":
-				Product_Tree treeData = (Product_Tree) postData;
-				return information_Service.update_State(product_Lib.enumSelect(INFORMATION.Tree, "State"),
-						treeData.getHashcode(), (long) treeData.getId(), treeData.isShowbool(),
-						treeData.getUserString());
-			default:
-				return "fail";
-			}
-
+			return switch (caseSelect) {
+				case "marjorCase" -> {
+					Product_Head headData = (Product_Head) postData;
+					yield information_Service.update_State(product_Lib.enumSelect(INFORMATION.Head, "State"),
+							headData.getHashcode(), (long) headData.getId(), headData.isShowbool(), headData.getUserString());
+				}
+				case "midCase" -> {
+					Product_Kid kidData = (Product_Kid) postData;
+					yield information_Service.update_State(product_Lib.enumSelect(INFORMATION.Kid, "State"),
+							kidData.getHashcode(), (long) kidData.getId(), kidData.isShowbool(), kidData.getUserString());
+				}
+				case "minorCase" -> {
+					Product_Tree treeData = (Product_Tree) postData;
+					yield information_Service.update_State(product_Lib.enumSelect(INFORMATION.Tree, "State"),
+							treeData.getHashcode(), (long) treeData.getId(), treeData.isShowbool(), treeData.getUserString());
+				}
+				default -> "fail";
+			};
 		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "sql exception";
 		}

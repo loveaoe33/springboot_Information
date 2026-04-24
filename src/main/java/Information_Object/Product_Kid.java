@@ -1,9 +1,7 @@
+// Refactored by AI on April 24, 2026
 package Information_Object;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -21,7 +19,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Component
 @Getter
 @Setter
 @Builder
@@ -34,38 +31,35 @@ public class Product_Kid implements Product_Interface {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	public int id;
+	private int id;
     @Schema(description = "區塊名稱", example = "健康套餐")
-	public String header;
+	private String header;
     @Schema(description = "父區塊識別碼", example = "")
-	public String father_header;
+	private String father_header;
     @Schema(description = "區塊識別碼", example = "")
-	public String hashcode;
+	private String hashcode;
     @Schema(description = "建立日期", example = "20250101")
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyyMMdd HH:mm:ss")
-	public String create_date;
+	private String create_date;
     @Schema(description = "建立者", example = "Leo")
-	public String create_name;
+	private String create_name;
     @Schema(description = "區塊狀態", example = "true")
-	public boolean showbool;
+	private boolean showbool;
     @Schema(description = "點擊次數", example = "1")
-	public int focus_number;
+	private int focus_number;
     @Transient
     @Schema(description = "接收傳送使用者認證字串", example = "loveaoe33,456,0")
-    public String userString;
+    private String userString;
 	@Transient
-	public HashMap<String, String> datas = new HashMap<String, String>();
+	private HashMap<String, String> datas = new HashMap<>();
 
 	@Override
 	public void set_Information_Data(String key, String item) {
-		// TODO Auto-generated method stub
 		datas.put(key, item);
-
 	}
 
 	@Override
 	public void delete_Information_Data(String key) {
-		// TODO Auto-generated method stub
 		if (datas.containsKey(key)) {
 			datas.remove(key);
 		}
@@ -73,8 +67,6 @@ public class Product_Kid implements Product_Interface {
 
 	@Override
 	public void update_Information_Data(String key, String data) {
-		// TODO Auto-generated method stub
-
 		if (datas.containsKey(key)) {
 			datas.put(key, data);
 		}
@@ -82,8 +74,6 @@ public class Product_Kid implements Product_Interface {
 
 	@Override
 	public HashMap<String, String> get_Information_arrayData() {
-		// TODO Auto-generated method stub
 		return datas;
 	}
-
 }

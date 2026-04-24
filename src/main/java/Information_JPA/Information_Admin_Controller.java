@@ -1,42 +1,34 @@
+// Refactored by AI on April 24, 2026
 package Information_JPA;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import Information_Object.Admin_Lib;
 import Information_Object.Product_Admin;
 
 @Component
 public class Information_Admin_Controller {
-	private Information_Admin_JPA information_Admin_JPA;
-	private Product_Admin product_Admin;
+	private final Information_Admin_JPA information_Admin_JPA;
+	private final Product_Admin product_Admin;
 
 	@Autowired
-	public Information_Admin_Controller(Information_Admin_JPA information_Admin_JPA, Product_Admin product_Admin,
-			Admin_Lib admin_Lib) {
+	public Information_Admin_Controller(Information_Admin_JPA information_Admin_JPA, Product_Admin product_Admin) {
 		this.information_Admin_JPA = information_Admin_JPA;
 		this.product_Admin = product_Admin;
-
 	}
 
 	public Product_Admin getAccount(long id) {
-		Product_Admin admin = information_Admin_JPA.findById(id).orElse(null);
-		return admin;
+		return information_Admin_JPA.findById(id).orElse(null);
 	}
 
 	public com.google.common.base.Optional<Product_Admin> loginAccount(String loginAccount, String loginPassword)
 			throws NoSuchAlgorithmException, InvalidKeySpecException { // login select
 		com.google.common.base.Optional<Product_Admin> existing = information_Admin_JPA.selectAdmin(loginAccount,
 				loginPassword);
-		if (existing != null && existing.isPresent()) {
-			Product_Admin data = existing.get();
-			return existing;
-		}
-		return null;
+		return (existing != null && existing.isPresent()) ? existing : null;
 	}
 
 	public boolean insertAccount(Product_Admin data) {
@@ -60,7 +52,7 @@ public class Information_Admin_Controller {
 	}
 
 	public boolean updateAccount(Product_Admin data) { // check
-		if ((Integer) data.getId() == null || information_Admin_JPA.existsById((long) data.getId())) {
+		if (!information_Admin_JPA.existsById((long) data.getId())) {
 			System.out.println("更新失敗 找不到ID:" + data.getId() + "帳號代碼為:" + data.getAccount());
 			return false;
 		} else {

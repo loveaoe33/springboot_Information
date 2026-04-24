@@ -39,7 +39,6 @@ public class Admin_Lib {
 		byte[] salt = generateSalt();
 		byte[] hash = hashPassword(password.toCharArray(), salt);
 		return Base64.getEncoder().encodeToString(salt) + ":" + Base64.getEncoder().encodeToString(hash);
-
 	}
 
 	// 驗證 token 是否對應原密碼
@@ -56,16 +55,14 @@ public class Admin_Lib {
 
 	private byte[] generateSalt() {
 		SecureRandom random = new SecureRandom();
-		byte[] salf = new byte[SALT_LENGTH];
-		random.nextBytes(salf);
-		return salf;
-
+		byte[] salt = new byte[SALT_LENGTH];
+		random.nextBytes(salt);
+		return salt;
 	}
 
 	// 將密碼與 salt hash 起來
 	private byte[] hashPassword(final char[] password, final byte[] salt)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-
 		PBEKeySpec spec = new PBEKeySpec(password, salt, ITERATIONS, KEY_LENGTH);
 		SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
 		return factory.generateSecret(spec).getEncoded();
@@ -73,20 +70,17 @@ public class Admin_Lib {
 
 	// 取得token
 	public String getAccount_Token(String password) throws Exception {
-
 		return generateToken(password);
 	}
 
 	// 驗證token
 	public boolean vailAccount_Token(String password, String token)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
-
 		return validateToken(password, token);
 	}
 
 	public String jsonWebToken() {
-
-		return "Sucess";
+		return "Success";
 	}
 
 	public String createJwt(String username) {
@@ -104,46 +98,38 @@ public class Admin_Lib {
 
 	public String parseJwt(String jwt) { // validateToken
 		try {
-
 			Jws<Claims> claimsJWS = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt);
 			Claims claims = claimsJWS.getBody();
 			System.out.println("JWT 驗證成功: ");
 			System.out.println("使用者: " + claims.get("username"));
 			System.out.println("到期時間: " + claims.getExpiration());
 
-			return "Sucess";
+			return "Success";
 		} catch (JwtException e) {
 			System.out.println("JWT 驗證失敗: " + e.getMessage());
 			return "fail";
-
 		}
-
 	}
 
 	public String hashPassword(String password) throws NoSuchAlgorithmException { // password hash
 		StringBuilder stringBuilder = new StringBuilder();
 		try {
-
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			byte[] hashBytes = digest.digest(password.getBytes());
 			for (byte b : hashBytes) {
 				stringBuilder.append(String.format("%02x", b));
 			}
-
 			return stringBuilder.toString();
-
 		} catch (NoSuchAlgorithmException e) {
-			System.out.println("Passwod hashError" + e.toString());
+			System.out.println("Password hashError" + e.toString());
 			return "fail";
 		}
-
 	}
 
 	public boolean accountCheck(String loginPassword, String hashPassword) { // hash check
 		try {
-			return (hashPassword(loginPassword).equals(hashPassword)) ? true : false;
+			return hashPassword(loginPassword).equals(hashPassword);
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}

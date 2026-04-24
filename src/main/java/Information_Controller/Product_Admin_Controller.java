@@ -1,8 +1,8 @@
+// Refactored by AI on April 24, 2026
 package Information_Controller;
 
 import java.security.NoSuchAlgorithmException;
 
-import org.hibernate.mapping.List;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,18 +34,18 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 //DELETE /api/admin/{id} → 刪除使用者
 
 @RestController
-@ComponentScan(basePackages = { "Information_Object", "Information_Object", "Information_JPA", "Information_Server" })
+@ComponentScan(basePackages = { "Information_Object", "Information_JPA", "Information_Server" })
 public class Product_Admin_Controller {
-	private Information_Admin_Service information_Admin_Service;
-	private ObjectMapper mapper;
-	private Admin_Lib admin_Lib;
-	private Product_Admin product_Admin;
+	private final Information_Admin_Service information_Admin_Service;
+	private final ObjectMapper mapper;
+	private final Admin_Lib admin_Lib;
+	private final Product_Admin product_Admin;
 
-	public Product_Admin_Controller(Information_Admin_Service information_Admin_Service, ObjectMapper mapper,Admin_Lib admin_Lib,Product_Admin product_Admin) {
+	public Product_Admin_Controller(Information_Admin_Service information_Admin_Service, ObjectMapper mapper, Admin_Lib admin_Lib, Product_Admin product_Admin) {
 		this.information_Admin_Service = information_Admin_Service;
-		this.admin_Lib = admin_Lib;
 		this.mapper = mapper;
-		this.product_Admin=product_Admin;
+		this.admin_Lib = admin_Lib;
+		this.product_Admin = product_Admin;
 	}
 
 	@Operation(summary = "取得所有使用者", description = "測試註記")
@@ -53,26 +53,21 @@ public class Product_Admin_Controller {
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@GetMapping("Product_Admin/")
 	public String getAllUsers() {
-		return "sucess";
+		return "success";
 	}
 	
 	@Operation(summary = "登入使用者", description = "測試註記")
 	@ApiResponses({ @ApiResponse(responseCode = "200", description = "發送成功"),
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
-	@PostMapping("Product_Admin/adminLogin")	
-	public String loginUsers(@RequestBody Product_Admin data) throws NoSuchAlgorithmException {
+	@PostMapping("Product_Admin/adminLogin")
+	public String loginUsers(@RequestBody Product_Admin data) {
 		try {
-			System.out.println("密碼是"+ data.getPassword()+  admin_Lib.getAccount_Token(data.getPassword()));
-			return information_Admin_Service.login_Admin(data.getAccount(),data.getPassword());
-		} catch (JsonProcessingException e) {
-			// TODO Auto-generated catch block
+			System.out.println("密碼是" + data.getPassword() + admin_Lib.getAccount_Token(data.getPassword()));
+			return information_Admin_Service.login_Admin(data.getAccount(), data.getPassword());
+		} catch (JsonProcessingException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 			return "fail";
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "fail";
-		}catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return "fail";
 		}
@@ -84,7 +79,7 @@ public class Product_Admin_Controller {
 			@ApiResponse(responseCode = "400", description = "參數錯誤") })
 	@GetMapping("/{id}")
 	public String get_Admin(@RequestBody Product_Admin data) {
-		return "sucess";
+		return "success";
 	}
 
 	@Operation(summary = "新增使用者")
@@ -93,10 +88,16 @@ public class Product_Admin_Controller {
 	@GetMapping("Product_Admin/insert_Admin")
 	public String post_Admin() { // insert admin
 		try {
-			Product_Admin datas=Product_Admin.builder().account("loveaoe55").password("123").token(admin_Lib.getAccount_Token("123")).depart("MIS").level(0).create_date("20250101").build();
+			Product_Admin datas = Product_Admin.builder()
+					.account("loveaoe55")
+					.password("123")
+					.token(admin_Lib.getAccount_Token("123"))
+					.depart("MIS")
+					.level(0)
+					.create_date("20250101")
+					.build();
 			return information_Admin_Service.insert_Admin(datas);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return "SQL Insert fail";
 		}
@@ -124,7 +125,5 @@ public class Product_Admin_Controller {
 	@DeleteMapping("/{id}")
 	public String delete_Admin(@RequestBody Product_Admin data) {// delete admin
 		return information_Admin_Service.delete_Admin(data);
-
 	}
-
 }

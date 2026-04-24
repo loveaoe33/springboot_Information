@@ -1,13 +1,12 @@
+// Refactored by AI on April 24, 2026
 package Information_JPA;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.mapping.List;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,14 +18,14 @@ import Information_Object.Product_Tree;
 
 @Component
 public class Informatin_JPA_Controller {
-	private Information_Head_JPA information_Head_JPA;
-	private Information_Kid_JPA information_Kid_JPA;
-	private Information_Tree_JPA information_Tree_JPA;
-	private Product_Head product_Head;
-	private Product_Kid product_Kid;
-	private Product_Tree product_Tree;
-	private ObjectMapper mapper;
-	private HashMap<String, Integer> numberValue = new HashMap<String, Integer>();
+	private final Information_Head_JPA information_Head_JPA;
+	private final Information_Kid_JPA information_Kid_JPA;
+	private final Information_Tree_JPA information_Tree_JPA;
+	private final Product_Head product_Head;
+	private final Product_Kid product_Kid;
+	private final Product_Tree product_Tree;
+	private final ObjectMapper mapper;
+	private final HashMap<String, Integer> numberValue = new HashMap<>();
 
 	public Informatin_JPA_Controller(Information_Head_JPA information_Head_JPA, Information_Kid_JPA information_Kid_JPA,
 			Information_Tree_JPA information_Tree_JPA, Product_Head product_Head, Product_Kid product_Kid,
@@ -44,37 +43,34 @@ public class Informatin_JPA_Controller {
 	}
 
 	public void init_Head() throws JsonProcessingException {
-		String data;
-		ArrayList<Product_Head> datas = (ArrayList<Product_Head>) information_Head_JPA.findAll();
+		List<Product_Head> datas = information_Head_JPA.findAll();
 		for (Product_Head item : datas) {
-			data = mapper.writeValueAsString(item);
+			String data = mapper.writeValueAsString(item);
 			product_Head.set_Information_Data(item.hashcode, data);
 		}
 	}
 
 	public void init_Kid() throws JsonProcessingException {
-		String data;
-		ArrayList<Product_Kid> datas = (ArrayList<Product_Kid>) information_Kid_JPA.findAll();
+		List<Product_Kid> datas = information_Kid_JPA.findAll();
 		for (Product_Kid item : datas) {
-			data = mapper.writeValueAsString(item);
+			String data = mapper.writeValueAsString(item);
 			product_Kid.set_Information_Data(item.hashcode, data);
 		}
 	}
 
 	public void init_Tree() throws JsonProcessingException {
-		String data;
-		ArrayList<Product_Tree> datas = (ArrayList<Product_Tree>) information_Tree_JPA.findAll();
+		List<Product_Tree> datas = information_Tree_JPA.findAll();
 		for (Product_Tree item : datas) {
 			numberValue.put(item.getHashcode(), item.getFocus_number());
-			data = mapper.writeValueAsString(item);
+			String data = mapper.writeValueAsString(item);
 			product_Tree.set_Information_Data(item.hashcode, data);
 		}
 	}
 
 	@Scheduled(fixedRate = 30 * 60 * 1000)
 	public void timerUpdate(String hashCode, int value) throws JsonProcessingException { // timer update
-		int Row = information_Tree_JPA.updateTreeNumber(hashCode, value);
-		if (Row > 0) {
+		int row = information_Tree_JPA.updateTreeNumber(hashCode, value);
+		if (row > 0) {
 			init_Tree();
 		}
 	}
@@ -84,136 +80,117 @@ public class Informatin_JPA_Controller {
 	}
 
 	public boolean saveConnection(Product_Interface data, String caseString, Long id) throws JsonProcessingException {
-		if (caseString.equals("Head01")) {
-			Product_Head productHead = (Product_Head) data;
-			if (data instanceof Product_Head) {
-				Product_Head result = information_Head_JPA.save(productHead);
-				product_Head.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
-				return true;
+		return switch (caseString) {
+			case "Head01" -> {
+				if (data instanceof Product_Head productHead) {
+					Product_Head result = information_Head_JPA.save(productHead);
+					product_Head.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
+					yield true;
+				}
+				yield false;
 			}
-			return false;
-
-		} else if (caseString.equals("Kid01")) {
-			Product_Kid productKid = (Product_Kid) data;
-			if (data instanceof Product_Kid) {
-				Product_Kid result = information_Kid_JPA.save(productKid);
-				product_Kid.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
-				return true;
+			case "Kid01" -> {
+				if (data instanceof Product_Kid productKid) {
+					Product_Kid result = information_Kid_JPA.save(productKid);
+					product_Kid.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
+					yield true;
+				}
+				yield false;
 			}
-			return false;
-		} else if (caseString.equals("Tree01")) {
-			Product_Tree productTree = (Product_Tree) data;
-			if (data instanceof Product_Tree) {
-				Product_Tree result = information_Tree_JPA.save(productTree);
-				product_Tree.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
-				return true;
+			case "Tree01" -> {
+				if (data instanceof Product_Tree productTree) {
+					Product_Tree result = information_Tree_JPA.save(productTree);
+					product_Tree.set_Information_Data(result.getHashcode(), mapper.writeValueAsString(result));
+					yield true;
+				}
+				yield false;
 			}
-			return false;
-		} else {
-			return false;
-		}
-
+			default -> false;
+		};
 	}
 
 	public boolean deleteConnection(String caseString, String hashCode, Long id) { // delete class
-		if (caseString.equals("Head02")) {
-			if (information_Kid_JPA.selectProductHeadCode(hashCode) > 0) { // Check kid no data
-				return false;
-			} else {
+		return switch (caseString) {
+			case "Head02" -> {
+				if (information_Kid_JPA.selectProductHeadCode(hashCode) > 0) { // Check kid no data
+					yield false;
+				}
 				information_Head_JPA.deleteById(id);
 				product_Head.delete_Information_Data(hashCode);
-				return true;
+				yield true;
 			}
-
-		} else if (caseString.equals("Kid02")) {
-			if (information_Tree_JPA.selectProductKidCode(hashCode) > 0) { // Check tree no data
-				return false;
-
-			} else {
+			case "Kid02" -> {
+				if (information_Tree_JPA.selectProductKidCode(hashCode) > 0) { // Check tree no data
+					yield false;
+				}
 				information_Kid_JPA.deleteById(id);
 				product_Kid.delete_Information_Data(hashCode);
-				return true;
-
+				yield true;
 			}
-
-		} else if (caseString.equals("Tree02")) {
-			information_Tree_JPA.deleteById(id);
-			product_Tree.delete_Information_Data(hashCode);
-			return true;
-		} else {
-			return false;
-		}
+			case "Tree02" -> {
+				information_Tree_JPA.deleteById(id);
+				product_Tree.delete_Information_Data(hashCode);
+				yield true;
+			}
+			default -> false;
+		};
 	}
 
 	public boolean updateConnection(String caseString, String jsonContent, String hashCode, Long id)
 			throws JsonProcessingException { // update detail
-		// content
-
-		if (caseString.equals("Head03")) {
-			return false;
-
-		} else if (caseString.equals("Kid03")) {
-			return false;
-
-		} else if (caseString.equals("Tree03")) {
-			int Row = information_Tree_JPA.updateTreeContent(hashCode, jsonContent);
-			if (Row > 0) {
-
-				Optional<Product_Tree> newData = information_Tree_JPA.findById(id);
-				newData.ifPresent(n -> {
-					try {
-						product_Tree.set_Information_Data(hashCode, mapper.writeValueAsString(newData.get()));
-					} catch (JsonProcessingException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				});
-
-				return true;
-			} else {
-				return false;
+		return switch (caseString) {
+			case "Head03", "Kid03" -> false;
+			case "Tree03" -> {
+				int row = information_Tree_JPA.updateTreeContent(hashCode, jsonContent);
+				if (row > 0) {
+					Optional<Product_Tree> newData = information_Tree_JPA.findById(id);
+					newData.ifPresent(n -> {
+						try {
+							product_Tree.set_Information_Data(hashCode, mapper.writeValueAsString(n));
+						} catch (JsonProcessingException e) {
+							e.printStackTrace();
+						}
+					});
+					yield true;
+				}
+				yield false;
 			}
-
-		} else {
-			return false;
-		}
+			default -> false;
+		};
 	}
 
 	public boolean updateShow(String caseString, Long id, String hashCode, boolean state)
 			throws JsonProcessingException { // update view
-		System.out.println("566" + caseString + id + hashCode);
-		if (caseString.equals("Head04")) {
-			int Row = information_Head_JPA.updateProudctState(id, hashCode, state);
-			Product_Head data = information_Head_JPA.selectUpdateData(id, hashCode);
-			if (Row > 0 && data != null) {
-				product_Head.set_Information_Data(data.getHashcode(), mapper.writeValueAsString(data));
-				return true;
-			} else {
-				return false;
+		return switch (caseString) {
+			case "Head04" -> {
+				int row = information_Head_JPA.updateProudctState(id, hashCode, state);
+				Product_Head data = information_Head_JPA.selectUpdateData(id, hashCode);
+				if (row > 0 && data != null) {
+					product_Head.set_Information_Data(data.getHashcode(), mapper.writeValueAsString(data));
+					yield true;
+				}
+				yield false;
 			}
-		} else if (caseString.equals("Kid04")) {
-			int Row = information_Kid_JPA.updateProudctState(id, hashCode, state);
-			Product_Kid data = information_Kid_JPA.selectUpdateData(id, hashCode);
-			System.out.println("ddd" + Row + data.id);
-			if (Row > 0 && data != null) {
-				product_Kid.set_Information_Data(data.getHashcode(), mapper.writeValueAsString(data));
-				return true;
-			} else {
-				return false;
+			case "Kid04" -> {
+				int row = information_Kid_JPA.updateProudctState(id, hashCode, state);
+				Product_Kid data = information_Kid_JPA.selectUpdateData(id, hashCode);
+				if (row > 0 && data != null) {
+					product_Kid.set_Information_Data(data.getHashcode(), mapper.writeValueAsString(data));
+					yield true;
+				}
+				yield false;
 			}
-		} else if (caseString.equals("Tree04")) {
-			int Row = information_Tree_JPA.updateProudctState(id, hashCode, state);
-			Product_Tree data = information_Tree_JPA.selectUpdateData(id, hashCode);
-			System.out.println("5766" + data + Row);
-
-			if (Row > 0 && data != null) {
-				product_Tree.set_Information_Data(data.getHashcode(), mapper.writeValueAsString(data));
-				return true;
-			} else {
-				return false;
+			case "Tree04" -> {
+				int row = information_Tree_JPA.updateProudctState(id, hashCode, state);
+				Product_Tree data = information_Tree_JPA.selectUpdateData(id, hashCode);
+				if (row > 0 && data != null) {
+					product_Tree.set_Information_Data(data.getHashcode(), mapper.writeValueAsString(data));
+					yield true;
+				}
+				yield false;
 			}
-		}
-		return false;
+			default -> false;
+		};
 	}
 
 	public Optional<Product_Head> get_Product_Detail(Long id) {
